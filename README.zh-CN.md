@@ -47,10 +47,10 @@ go run ./examples/gallery
 
 ## 开发者入门
 
-在应用模块中安装 **0.2026.15**：
+在应用模块中安装 **0.2026.16**：
 
 ```sh
-go get github.com/oneo-me/onevra/source@v0.2026.15
+go get github.com/oneo-me/onevra/source@v0.2026.16
 ```
 
 将以下最小应用保存为 `main.go`，在应用模块中执行 `go run .`：

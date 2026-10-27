@@ -1,7 +1,7 @@
 {
   "name": "Onevra Gallery",
   "identifier": "me.oneo.onevra.gallery",
-  "version": "0.2026.15",
+  "version": "0.2026.16",
   "icon": "assets/icon.png",
   "main": "./examples/gallery",
   "out": "../dist",
