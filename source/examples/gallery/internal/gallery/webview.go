@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"image/color"
 	"log"
 	"runtime"
 	"slices"
@@ -22,7 +23,8 @@ import (
 // tells that a modal layer of the gallery is open over the window.
 // safariTab leaves Tab to fields, as Safari does, in the next view made.
 // contentRules hides the demonstration page's sponsored banner; rules is
-// what it compiled on first use.
+// what it compiled on first use. themeColor and audible are what the page
+// last reported, and opened what became of its last window.open.
 type webViewDemo struct {
 	view         *mygo.WebView
 	err          error
@@ -35,6 +37,13 @@ type webViewDemo struct {
 	rulesErr     error
 	rulesPending bool
 	window       func() *mygo.Window
+	openURL      func(string) error
+	themeColor   ui.Color
+	hasTheme     bool
+	audible      bool
+	muted        bool
+	opened       string
+	offs         []func()
 }
 
 func (d *webViewDemo) start(create func() (*mygo.WebView, error)) {
@@ -42,13 +51,56 @@ func (d *webViewDemo) start(create func() (*mygo.WebView, error)) {
 		return
 	}
 	d.view, d.err = create()
+	if d.view != nil {
+		d.watch(d.view.Page())
+	}
+}
+
+// watch follows the page's theme color and sound, and decides its window
+// opens: one the user asked for opens in the browser, and a pop-up the page
+// opened on its own is refused. Events arrive on the main thread.
+func (d *webViewDemo) watch(page *mygo.Page) {
+	refresh := func() {
+		if w := d.window; w != nil && w() != nil {
+			w().Invalidate()
+		}
+	}
+	d.muted = false
+	tint, ok := page.ThemeColor()
+	d.themeColor, d.hasTheme = ui.RGB(tint.R, tint.G, tint.B), ok
+	d.offs = append(d.offs,
+		page.OnThemeColorChanged(func(tint color.NRGBA, ok bool) {
+			d.themeColor, d.hasTheme = ui.RGB(tint.R, tint.G, tint.B), ok
+			refresh()
+		}),
+		page.OnAudibleChanged(func(audible bool) {
+			d.audible = audible
+			refresh()
+		}))
+	page.SetWindowOpenHandler(func(req mygo.WindowOpenRequest) *mygo.WindowOptions {
+		d.opened = "blocked"
+		if req.UserInitiated {
+			d.opened = "opened"
+			if d.openURL != nil {
+				if err := d.openURL(req.URL); err != nil {
+					log.Printf("Open %s: %v", req.URL, err)
+				}
+			}
+		}
+		refresh()
+		return nil
+	})
 }
 
 func (d *webViewDemo) close() {
+	for _, off := range d.offs {
+		off()
+	}
 	if d.view != nil {
 		d.view.Destroy()
 	}
-	d.view, d.err, d.loaded = nil, nil, ""
+	d.view, d.err, d.loaded, d.offs = nil, nil, "", nil
+	d.audible, d.hasTheme, d.opened = false, false, ""
 }
 
 // newWebView names Gallery in the page's user agent, after the system web
@@ -125,7 +177,7 @@ const webViewContentRules = `[
 const webViewContentRulesID = "gallery-web-view"
 
 var webViewPage = template.Must(template.New("page").Parse(`<!doctype html>
-<html lang="{{.Lang}}"><head><meta charset="utf-8"><style>
+<html lang="{{.Lang}}"><head><meta charset="utf-8"><meta name="theme-color" content="{{.Accent}}"><style>
 body { margin: 0; padding: 24px; font: 14px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif;
 	background: {{.Background}}; color: {{.Text}}; }
 h1 { margin: 0 0 8px; font-size: 20px; }
@@ -149,6 +201,13 @@ button { background: {{.Accent}}; color: {{.AccentText}}; border-color: transpar
 </div>
 <h2>{{.UserAgent}}</h2>
 <p><code id="agent"></code></p>
+<h2>{{.PageEvents}}</h2>
+<div class="row">
+	<button onclick="tint()">{{.ThemeColor}}</button>
+	<button onclick="tone()">{{.Tone}}</button>
+	<a href="https://example.com/" target="_blank">{{.OpenLink}}</a>
+	<button onclick="setTimeout(() => window.open('https://example.com/'), 500)">{{.PopUp}}</button>
+</div>
 <h2>{{.Cookies}}</h2>
 <p><code id="jar"></code></p>
 <div class="row">
@@ -161,6 +220,17 @@ function showJar() {
 function setCookie() {
 	document.cookie = "from_page=" + Math.random().toString(36).slice(2, 6) + "; path=/; max-age=3600";
 	showJar();
+}
+function tint() {
+	document.querySelector('meta[name="theme-color"]').content = "hsl(" + Math.floor(Math.random() * 360) + " 70% 50%)";
+}
+function tone() {
+	const audio = new AudioContext(), osc = audio.createOscillator(), gain = audio.createGain();
+	gain.gain.value = 0.1;
+	osc.connect(gain).connect(audio.destination);
+	osc.start();
+	osc.stop(audio.currentTime + 2);
+	osc.onended = () => audio.close();
 }
 showJar();
 document.getElementById("agent").textContent = navigator.userAgent;
@@ -191,6 +261,11 @@ func webViewHTML(c *ui.Context) string {
 		"UserAgent":     tr(c, "webViewUserAgent"),
 		"Cookies":       tr(c, "webViewCookies"),
 		"CookieSet":     tr(c, "webViewCookieSet"),
+		"PageEvents":    tr(c, "webViewPageEvents"),
+		"ThemeColor":    tr(c, "webViewChangeThemeColor"),
+		"Tone":          tr(c, "webViewPlayTone"),
+		"OpenLink":      tr(c, "webViewOpenLink"),
+		"PopUp":         tr(c, "webViewPopUp"),
 		"Sponsored":     tr(c, "webViewSponsored"),
 		"SponsoredBody": tr(c, "webViewSponsoredBody"),
 	})
@@ -240,6 +315,7 @@ func exampleWebView(c *ui.Context, s *demoState) {
 		if d.rulesErr != nil {
 			components.Text(c, tr(c, "webViewContentRulesFailed")+": "+d.rulesErr.Error()).TextColor(t.Danger).Wrap()
 		}
+		webViewPageState(c, d)
 		var frame ui.Element
 		if d.covered {
 			// Glass materials cannot see a web page under them, so a modal layer
@@ -254,6 +330,39 @@ func exampleWebView(c *ui.Context, s *demoState) {
 		})
 	}
 	webDataExample(c, s, t)
+}
+
+// webViewPageState shows what the page tells the app: its theme color, its
+// sound, which the app can mute as a browser mutes a tab, the process that
+// runs it and what became of its last window.open. Nothing shows in the
+// frame that closed the view to make it again.
+func webViewPageState(c *ui.Context, d *webViewDemo) {
+	if d.view == nil {
+		return
+	}
+	t, m := c.Theme(), msg(c)
+	ui.Row(c).Gap(t.Space(3)).AlignItems(ui.Center).Wrap().Children(func() {
+		components.Text(c, tr(c, "webViewThemeColor")).TextColor(t.TextMuted)
+		if d.hasTheme {
+			ui.Box(c).Size(16, 16).Radius(4).Background(d.themeColor).Border(1, t.Border).Label(tr(c, "webViewThemeColor"))
+		} else {
+			components.Text(c, yesNo(m, false))
+		}
+		components.Text(c, tr(c, "webViewAudible")).TextColor(t.TextMuted)
+		components.Text(c, yesNo(m, d.audible))
+		if components.Checkbox(c, &d.muted, tr(c, "webViewMute")).Changed() {
+			d.view.Page().SetAudioMuted(d.muted)
+		}
+	})
+	if pid := d.view.Page().ProcessID(); pid > 0 {
+		systemRow(c, tr(c, "webViewProcess"), fmt.Sprint(pid))
+	}
+	switch d.opened {
+	case "opened":
+		components.Text(c, tr(c, "webViewOpened")).TextColor(t.TextMuted).Wrap()
+	case "blocked":
+		components.Text(c, tr(c, "webViewBlocked")).TextColor(t.TextMuted).Wrap()
+	}
 }
 
 // webDataExample reads and changes the cookies of the app's pages: the data

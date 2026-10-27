@@ -10696,3 +10696,393 @@ func FlyoutMaterial() string { return In(i18n.Locale()).FlyoutMaterial() }
 func (msgs Messages) FlyoutMaterial() string {
 	return Catalog.Format(msgs.locale, "flyoutMaterial", nil)
 }
+
+// ComponentStrokes says "Strokes"
+// in the language the app shows.
+func ComponentStrokes() string { return In(i18n.Locale()).ComponentStrokes() }
+
+// ComponentStrokes says "Strokes"
+// in the language of msgs.
+func (msgs Messages) ComponentStrokes() string {
+	return Catalog.Format(msgs.locale, "componentStrokes", nil)
+}
+
+// ComponentZoom says "Zoom"
+// in the language the app shows.
+func ComponentZoom() string { return In(i18n.Locale()).ComponentZoom() }
+
+// ComponentZoom says "Zoom"
+// in the language of msgs.
+func (msgs Messages) ComponentZoom() string {
+	return Catalog.Format(msgs.locale, "componentZoom", nil)
+}
+
+// FrameRate says "Frame rate"
+// in the language the app shows.
+func FrameRate() string { return In(i18n.Locale()).FrameRate() }
+
+// FrameRate says "Frame rate"
+// in the language of msgs.
+func (msgs Messages) FrameRate() string {
+	return Catalog.Format(msgs.locale, "frameRate", nil)
+}
+
+// GlassClarity says "Clarity"
+// in the language the app shows.
+func GlassClarity() string { return In(i18n.Locale()).GlassClarity() }
+
+// GlassClarity says "Clarity"
+// in the language of msgs.
+func (msgs Messages) GlassClarity() string {
+	return Catalog.Format(msgs.locale, "glassClarity", nil)
+}
+
+// BoxHideMiddle says "Hide the middle box"
+// in the language the app shows.
+func BoxHideMiddle() string { return In(i18n.Locale()).BoxHideMiddle() }
+
+// BoxHideMiddle says "Hide the middle box"
+// in the language of msgs.
+func (msgs Messages) BoxHideMiddle() string {
+	return Catalog.Format(msgs.locale, "boxHideMiddle", nil)
+}
+
+// Third says "Third"
+// in the language the app shows.
+func Third() string { return In(i18n.Locale()).Third() }
+
+// Third says "Third"
+// in the language of msgs.
+func (msgs Messages) Third() string {
+	return Catalog.Format(msgs.locale, "third", nil)
+}
+
+// StrokeButtCap says "Butt cap"
+// in the language the app shows.
+func StrokeButtCap() string { return In(i18n.Locale()).StrokeButtCap() }
+
+// StrokeButtCap says "Butt cap"
+// in the language of msgs.
+func (msgs Messages) StrokeButtCap() string {
+	return Catalog.Format(msgs.locale, "strokeButtCap", nil)
+}
+
+// StrokeRoundCap says "Round cap"
+// in the language the app shows.
+func StrokeRoundCap() string { return In(i18n.Locale()).StrokeRoundCap() }
+
+// StrokeRoundCap says "Round cap"
+// in the language of msgs.
+func (msgs Messages) StrokeRoundCap() string {
+	return Catalog.Format(msgs.locale, "strokeRoundCap", nil)
+}
+
+// StrokeSquareCap says "Square cap"
+// in the language the app shows.
+func StrokeSquareCap() string { return In(i18n.Locale()).StrokeSquareCap() }
+
+// StrokeSquareCap says "Square cap"
+// in the language of msgs.
+func (msgs Messages) StrokeSquareCap() string {
+	return Catalog.Format(msgs.locale, "strokeSquareCap", nil)
+}
+
+// StrokeMiterJoin says "Miter join"
+// in the language the app shows.
+func StrokeMiterJoin() string { return In(i18n.Locale()).StrokeMiterJoin() }
+
+// StrokeMiterJoin says "Miter join"
+// in the language of msgs.
+func (msgs Messages) StrokeMiterJoin() string {
+	return Catalog.Format(msgs.locale, "strokeMiterJoin", nil)
+}
+
+// StrokeRoundJoin says "Round join"
+// in the language the app shows.
+func StrokeRoundJoin() string { return In(i18n.Locale()).StrokeRoundJoin() }
+
+// StrokeRoundJoin says "Round join"
+// in the language of msgs.
+func (msgs Messages) StrokeRoundJoin() string {
+	return Catalog.Format(msgs.locale, "strokeRoundJoin", nil)
+}
+
+// StrokeBevelJoin says "Bevel join"
+// in the language the app shows.
+func StrokeBevelJoin() string { return In(i18n.Locale()).StrokeBevelJoin() }
+
+// StrokeBevelJoin says "Bevel join"
+// in the language of msgs.
+func (msgs Messages) StrokeBevelJoin() string {
+	return Catalog.Format(msgs.locale, "strokeBevelJoin", nil)
+}
+
+// StrokeDashes says "Dashed stroke"
+// in the language the app shows.
+func StrokeDashes() string { return In(i18n.Locale()).StrokeDashes() }
+
+// StrokeDashes says "Dashed stroke"
+// in the language of msgs.
+func (msgs Messages) StrokeDashes() string {
+	return Catalog.Format(msgs.locale, "strokeDashes", nil)
+}
+
+// StrokeDashOffset says "Dash offset"
+// in the language the app shows.
+func StrokeDashOffset() string { return In(i18n.Locale()).StrokeDashOffset() }
+
+// StrokeDashOffset says "Dash offset"
+// in the language of msgs.
+func (msgs Messages) StrokeDashOffset() string {
+	return Catalog.Format(msgs.locale, "strokeDashOffset", nil)
+}
+
+// ZoomActualSize says "Actual size"
+// in the language the app shows.
+func ZoomActualSize() string { return In(i18n.Locale()).ZoomActualSize() }
+
+// ZoomActualSize says "Actual size"
+// in the language of msgs.
+func (msgs Messages) ZoomActualSize() string {
+	return Catalog.Format(msgs.locale, "zoomActualSize", nil)
+}
+
+// MotionFps says "{fps} fps"
+// in the language the app shows.
+func MotionFps(fps int) string { return In(i18n.Locale()).MotionFps(fps) }
+
+// MotionFps says "{fps} fps"
+// in the language of msgs.
+func (msgs Messages) MotionFps(fps int) string {
+	return Catalog.Format(msgs.locale, "motionFps", map[string]any{"fps": fps})
+}
+
+// MotionDisplayRate says "Display rate"
+// in the language the app shows.
+func MotionDisplayRate() string { return In(i18n.Locale()).MotionDisplayRate() }
+
+// MotionDisplayRate says "Display rate"
+// in the language of msgs.
+func (msgs Messages) MotionDisplayRate() string {
+	return Catalog.Format(msgs.locale, "motionDisplayRate", nil)
+}
+
+// MotionRecord says "Turning record"
+// in the language the app shows.
+func MotionRecord() string { return In(i18n.Locale()).MotionRecord() }
+
+// MotionRecord says "Turning record"
+// in the language of msgs.
+func (msgs Messages) MotionRecord() string {
+	return Catalog.Format(msgs.locale, "motionRecord", nil)
+}
+
+// AudioNotesEnded says "Notes played to the end: {count}"
+// in the language the app shows.
+func AudioNotesEnded(count int) string { return In(i18n.Locale()).AudioNotesEnded(count) }
+
+// AudioNotesEnded says "Notes played to the end: {count}"
+// in the language of msgs.
+func (msgs Messages) AudioNotesEnded(count int) string {
+	return Catalog.Format(msgs.locale, "audioNotesEnded", map[string]any{"count": count})
+}
+
+// AudioPlaybackLatency says "Buffer ahead for music playback"
+// in the language the app shows.
+func AudioPlaybackLatency() string { return In(i18n.Locale()).AudioPlaybackLatency() }
+
+// AudioPlaybackLatency says "Buffer ahead for music playback"
+// in the language of msgs.
+func (msgs Messages) AudioPlaybackLatency() string {
+	return Catalog.Format(msgs.locale, "audioPlaybackLatency", nil)
+}
+
+// AudioMediaControls says "Show the loop in the system's media controls"
+// in the language the app shows.
+func AudioMediaControls() string { return In(i18n.Locale()).AudioMediaControls() }
+
+// AudioMediaControls says "Show the loop in the system's media controls"
+// in the language of msgs.
+func (msgs Messages) AudioMediaControls() string {
+	return Catalog.Format(msgs.locale, "audioMediaControls", nil)
+}
+
+// WebViewPageEvents says "Page events"
+// in the language the app shows.
+func WebViewPageEvents() string { return In(i18n.Locale()).WebViewPageEvents() }
+
+// WebViewPageEvents says "Page events"
+// in the language of msgs.
+func (msgs Messages) WebViewPageEvents() string {
+	return Catalog.Format(msgs.locale, "webViewPageEvents", nil)
+}
+
+// WebViewChangeThemeColor says "Change theme color"
+// in the language the app shows.
+func WebViewChangeThemeColor() string { return In(i18n.Locale()).WebViewChangeThemeColor() }
+
+// WebViewChangeThemeColor says "Change theme color"
+// in the language of msgs.
+func (msgs Messages) WebViewChangeThemeColor() string {
+	return Catalog.Format(msgs.locale, "webViewChangeThemeColor", nil)
+}
+
+// WebViewPlayTone says "Play a tone"
+// in the language the app shows.
+func WebViewPlayTone() string { return In(i18n.Locale()).WebViewPlayTone() }
+
+// WebViewPlayTone says "Play a tone"
+// in the language of msgs.
+func (msgs Messages) WebViewPlayTone() string {
+	return Catalog.Format(msgs.locale, "webViewPlayTone", nil)
+}
+
+// WebViewOpenLink says "Open a link in a new window"
+// in the language the app shows.
+func WebViewOpenLink() string { return In(i18n.Locale()).WebViewOpenLink() }
+
+// WebViewOpenLink says "Open a link in a new window"
+// in the language of msgs.
+func (msgs Messages) WebViewOpenLink() string {
+	return Catalog.Format(msgs.locale, "webViewOpenLink", nil)
+}
+
+// WebViewPopUp says "Open a pop-up after a delay"
+// in the language the app shows.
+func WebViewPopUp() string { return In(i18n.Locale()).WebViewPopUp() }
+
+// WebViewPopUp says "Open a pop-up after a delay"
+// in the language of msgs.
+func (msgs Messages) WebViewPopUp() string {
+	return Catalog.Format(msgs.locale, "webViewPopUp", nil)
+}
+
+// WebViewThemeColor says "Theme color"
+// in the language the app shows.
+func WebViewThemeColor() string { return In(i18n.Locale()).WebViewThemeColor() }
+
+// WebViewThemeColor says "Theme color"
+// in the language of msgs.
+func (msgs Messages) WebViewThemeColor() string {
+	return Catalog.Format(msgs.locale, "webViewThemeColor", nil)
+}
+
+// WebViewAudible says "Playing sound"
+// in the language the app shows.
+func WebViewAudible() string { return In(i18n.Locale()).WebViewAudible() }
+
+// WebViewAudible says "Playing sound"
+// in the language of msgs.
+func (msgs Messages) WebViewAudible() string {
+	return Catalog.Format(msgs.locale, "webViewAudible", nil)
+}
+
+// WebViewMute says "Mute page"
+// in the language the app shows.
+func WebViewMute() string { return In(i18n.Locale()).WebViewMute() }
+
+// WebViewMute says "Mute page"
+// in the language of msgs.
+func (msgs Messages) WebViewMute() string {
+	return Catalog.Format(msgs.locale, "webViewMute", nil)
+}
+
+// WebViewProcess says "Web content process"
+// in the language the app shows.
+func WebViewProcess() string { return In(i18n.Locale()).WebViewProcess() }
+
+// WebViewProcess says "Web content process"
+// in the language of msgs.
+func (msgs Messages) WebViewProcess() string {
+	return Catalog.Format(msgs.locale, "webViewProcess", nil)
+}
+
+// WebViewOpened says "Opened the window the user asked for in the browser."
+// in the language the app shows.
+func WebViewOpened() string { return In(i18n.Locale()).WebViewOpened() }
+
+// WebViewOpened says "Opened the window the user asked for in the browser."
+// in the language of msgs.
+func (msgs Messages) WebViewOpened() string {
+	return Catalog.Format(msgs.locale, "webViewOpened", nil)
+}
+
+// WebViewBlocked says "Blocked a pop-up the page opened on its own."
+// in the language the app shows.
+func WebViewBlocked() string { return In(i18n.Locale()).WebViewBlocked() }
+
+// WebViewBlocked says "Blocked a pop-up the page opened on its own."
+// in the language of msgs.
+func (msgs Messages) WebViewBlocked() string {
+	return Catalog.Format(msgs.locale, "webViewBlocked", nil)
+}
+
+// CodeEditorHighlight says "Highlight matches"
+// in the language the app shows.
+func CodeEditorHighlight() string { return In(i18n.Locale()).CodeEditorHighlight() }
+
+// CodeEditorHighlight says "Highlight matches"
+// in the language of msgs.
+func (msgs Messages) CodeEditorHighlight() string {
+	return Catalog.Format(msgs.locale, "codeEditorHighlight", nil)
+}
+
+// AppearanceAppActive says "App in front"
+// in the language the app shows.
+func AppearanceAppActive() string { return In(i18n.Locale()).AppearanceAppActive() }
+
+// AppearanceAppActive says "App in front"
+// in the language of msgs.
+func (msgs Messages) AppearanceAppActive() string {
+	return Catalog.Format(msgs.locale, "appearanceAppActive", nil)
+}
+
+// FlyoutFitted says "Fit to page"
+// in the language the app shows.
+func FlyoutFitted() string { return In(i18n.Locale()).FlyoutFitted() }
+
+// FlyoutFitted says "Fit to page"
+// in the language of msgs.
+func (msgs Messages) FlyoutFitted() string {
+	return Catalog.Format(msgs.locale, "flyoutFitted", nil)
+}
+
+// FlyoutFittedBody says "This page sizes the flyout."
+// in the language the app shows.
+func FlyoutFittedBody() string { return In(i18n.Locale()).FlyoutFittedBody() }
+
+// FlyoutFittedBody says "This page sizes the flyout."
+// in the language of msgs.
+func (msgs Messages) FlyoutFittedBody() string {
+	return Catalog.Format(msgs.locale, "flyoutFittedBody", nil)
+}
+
+// FlyoutFittedAdd says "Add an item"
+// in the language the app shows.
+func FlyoutFittedAdd() string { return In(i18n.Locale()).FlyoutFittedAdd() }
+
+// FlyoutFittedAdd says "Add an item"
+// in the language of msgs.
+func (msgs Messages) FlyoutFittedAdd() string {
+	return Catalog.Format(msgs.locale, "flyoutFittedAdd", nil)
+}
+
+// FlyoutFittedItem says "Item"
+// in the language the app shows.
+func FlyoutFittedItem() string { return In(i18n.Locale()).FlyoutFittedItem() }
+
+// FlyoutFittedItem says "Item"
+// in the language of msgs.
+func (msgs Messages) FlyoutFittedItem() string {
+	return Catalog.Format(msgs.locale, "flyoutFittedItem", nil)
+}
+
+// ComponentHiddenElements says "Hidden elements"
+// in the language the app shows.
+func ComponentHiddenElements() string { return In(i18n.Locale()).ComponentHiddenElements() }
+
+// ComponentHiddenElements says "Hidden elements"
+// in the language of msgs.
+func (msgs Messages) ComponentHiddenElements() string {
+	return Catalog.Format(msgs.locale, "componentHiddenElements", nil)
+}

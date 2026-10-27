@@ -1,7 +1,9 @@
 package gallery
 
 import (
+	"log"
 	"runtime"
+	"sync"
 
 	"github.com/egoist/mygo"
 )
@@ -31,9 +33,19 @@ func (g *Gallery) showMainWindow() {
 	win.Focus()
 }
 
+// dockIcon marks Show Gallery with the application's glyph, in its own
+// colors. MyGo decodes it once for every menu made again.
+var dockIcon = sync.OnceValue(func() *mygo.MenuIcon {
+	icon, err := mygo.NewMenuIcon(trayIcon(false), false)
+	if err != nil {
+		log.Printf("Dock menu icon: %v", err)
+	}
+	return icon
+})
+
 func (g *Gallery) dockMenu() *mygo.Menu {
 	return mygo.NewMenu([]*mygo.MenuItem{
-		{ID: "show-gallery", Label: g.text("showGallery"), Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "show-gallery", Label: g.text("showGallery"), Icon: dockIcon(), Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.showMainWindow()
 		}},
 		mygo.Separator(),

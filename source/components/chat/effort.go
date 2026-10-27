@@ -206,8 +206,8 @@ type effortMotion struct {
 }
 
 // effortFrame is how often the panel's effects move. The trigger's icon,
-// shown all the time, moves every effortIconFrame: its halo breathes and
-// its blocks drift slowly, and each of its frames paints the whole window.
+// shown all the time, moves every effortIconFrame, as its halo breathes
+// and its blocks drift slowly.
 const (
 	effortFrame     = 16 * time.Millisecond
 	effortIconFrame = 33 * time.Millisecond

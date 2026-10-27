@@ -38,14 +38,15 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 
 | Page | Integration boundary |
 | --- | --- |
-| Content display / Markdown | MyGo `ui/markdown` over a cached [fixture](../../source/resources/markdown.md), with resource images, gallery-owned links and an interactive custom code block |
+| Content display / Markdown | MyGo `ui/markdown` over a cached [fixture](../../source/resources/markdown.md), with resource images, gallery-owned links, an interactive custom code block and a gallery-drawn inline math renderer |
 | Content display / Chat | Conversation folding, bounded details, composer pickers, attachments, context meter and usage limits, and a simulated streamed reply started from Send or the titlebar; no model or file access |
 | Plugins / Terminal | MyGo shell session, retained across navigation and closed with Gallery; titlebar find and clear, and a menu mirroring the session into a second terminal |
 | Charts / Data charts | Bar, line, area, stacked bar, donut, bubble and split bar charts of the public chart component in fixed tiles, each with its own selection and title-row tools that update data, hide the legend, show the empty state and add or remove bubbles |
 | Layout & containers / Transforms | Editable Onevra controls and anchored popovers under composed transforms, plus a perspective card |
-| Layout & containers / Motion | Retargetable spring presets, replayable keyframes and animated poses |
+| Layout & containers / Motion | Retargetable spring presets, replayable keyframes, animated poses and a record turning at a chosen frame rate over cached grooves |
+| Desktop / Zoom | Zooms the whole Gallery window through MyGo; the zoom stays across pages until reset and is never saved |
 | Games / Canvas | Offscreen canvas, smooth and pixelated bitmap regions and painter transforms |
-| Code & diffs / Code editor, Diff viewer | MyGo `ui/editor` used directly; in-memory buffers with gutter changes, a read-only snippet, editable diffs and hunk actions |
+| Code & diffs / Code editor, Diff viewer | MyGo `ui/editor` used directly; in-memory buffers with gutter changes and highlighted matches, a read-only snippet, editable diffs and hunk actions |
 
 The [chart examples](../../source/examples/gallery/internal/gallery/control_chart.go) use Onevra's public [chart component](components.md#charts) on one page with localized application-owned data. The [motion examples](../../source/examples/gallery/internal/gallery/mygo_motion.go) use MyGo's animation methods directly. Neither creates native resources, background loops or timers; animation lifetime follows the built elements and MyGo's reduced-motion preference.
 
@@ -56,9 +57,9 @@ Terminal starts the user's default login shell on first entry. MyGo owns shell s
 | Page | Creation and cleanup |
 | --- | --- |
 | Desktop / System notifications | Explicit send action requests delivery; replacement or shutdown withdraws the demo notification |
-| Feedback & overlays / Flyout | Actions open parent-owned native windows; MyGo owns placement, dismissal and parent lifetime |
-| Content display / WebView | Gallery retains the native view, refills its background with the current theme, hides it under modal layers and shares a cookie store with the page's own document.cookie; it compiles content rules off the UI thread and applies them to hide the page's demonstration ad; cookie calls happen only in the native window |
-| Desktop / Audio | Sounds are synthesized in memory on first use; the loop plays its intro once, and Gallery close stops it. Headless views never open an audio device |
+| Feedback & overlays / Flyout | Actions open parent-owned native windows, one a web page that sizes it; MyGo owns placement, dismissal and parent lifetime |
+| Content display / WebView | Gallery retains the native view, refills its background with the current theme, hides it under modal layers and shares a cookie store with the page's own document.cookie; it compiles content rules off the UI thread and applies them to hide the page's demonstration ad; it shows the page's theme color and sound, mutes it on request, opens user-requested windows in the browser and refuses pop-ups the page opens on its own; cookie calls happen only in the native window |
+| Desktop / Audio | Sounds are synthesized in memory on first use; the loop plays its intro once and, on request, shows in the system's media controls, which can play and pause it; Gallery close stops it and clears those controls. Headless views never open an audio device |
 | Desktop / system services | The System information page presents the desktop's appearance, fonts, languages and formats, network state and credential store as tabs; Recent documents, File watching, Global shortcuts and Native dialogs stay separate pages. All call MyGo only in the native window; store, dialog and system queries run off the UI thread and return through the gallery window; the network listener, folder watch and registered shortcut end when Gallery closes. Headless views never call the running app |
 | Games / Game loop | The fixed-step loop runs only while the page shows; native windows read gamepads, headless views never load controller frameworks |
 

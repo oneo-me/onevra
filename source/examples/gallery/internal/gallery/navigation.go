@@ -15,10 +15,13 @@ var navigationGroups = []string{
 // at that tag, unless the route changed again since, before recording its
 // own. A route is in at most one list; a route added since the release stays
 // new however often it changes.
-var newPages = map[string]bool{}
+var newPages = map[string]bool{
+	"mygo/Strokes": true, "mygo/Hidden elements": true, "mygo/Zoom": true,
+}
 
 var updatedPages = map[string]bool{
-	"mygo/WebView": true,
+	"mygo/WebView": true, "mygo/Glass": true, "mygo/Audio": true, "mygo/Flyout": true, "mygo/Markdown": true,
+	"mygo/Code editor": true, "mygo/System information": true, "mygo/Motion": true,
 }
 
 type navigationEntry struct {

@@ -193,23 +193,24 @@ func TestEffortStrengthWithOff(t *testing.T) {
 	}
 }
 
-// The trigger's icon shows all the time, and each of its frames paints
-// the whole window again: it asks for frames only while something of it
-// moves, not at the weaker levels, and at most every effortIconFrame.
+// The trigger's icon shows all the time: it asks for frames only while
+// something of it moves, not at the weaker levels, and at most every
+// effortIconFrame. Each frame it paints advances its clock.
 func TestEffortIconPaintsOnlyWhileMoving(t *testing.T) {
 	levels := []Option{{ID: "low", Label: "Low"}, {ID: "medium", Label: "Medium"}, {ID: "high", Label: "High"}, {ID: "max", Label: "Max"}}
 	frames := func(selected string) int {
 		var state EffortState
-		paints := 0
 		tt := ui.NewTester(func(c *ui.Context) {
-			ui.Column(c).Children(func() {
-				ui.Box(c).Size(1, 1).Draw(func(*ui.Painter, ui.Rect) { paints++ })
-				EffortPicker(c, &state, EffortPickerOptions{Label: "Effort", Icon: lucide.Brain, Levels: levels, Selected: selected})
-			})
+			EffortPicker(c, &state, EffortPickerOptions{Label: "Effort", Icon: lucide.Brain, Levels: levels, Selected: selected})
 		}, 300, 100)
 		tt.Advance(2 * effortTransition)
-		paints = 0
-		tt.Advance(time.Second)
+		paints, last := 0, state.time.at
+		for range 60 {
+			tt.Advance(time.Second / 60)
+			if state.time.at != last {
+				paints, last = paints+1, state.time.at
+			}
+		}
 		return paints
 	}
 	if n := frames("medium"); n != 0 {

@@ -3,6 +3,7 @@ package gallery
 import (
 	"fmt"
 	"slices"
+	"strings"
 	"testing"
 	"time"
 
@@ -345,6 +346,91 @@ func TestNewComponentsGroupRenders(t *testing.T) {
 			if !tt.HasText(g.text(entry.label)) {
 				t.Fatalf("%s: missing %s", lang, entry.label)
 			}
+		}
+	}
+}
+
+func TestHiddenElementGivesBackItsRoom(t *testing.T) {
+	g, s, tt := featureTester("Hidden elements", "Default", "zh-Hans", 540)
+	if !tt.HasText(g.text("second")) {
+		t.Fatalf("missing middle box: %q", tt.Texts())
+	}
+	if err := tt.Click(g.text("boxHideMiddle")); err != nil {
+		t.Fatal(err)
+	}
+	first, _ := tt.Find(g.text("first"))
+	third, _ := tt.Find(g.text("third"))
+	if !s.on || tt.HasText(g.text("second")) || third.X-first.X > 200 {
+		t.Fatalf("hidden box kept its room: first %v, third %v", first, third)
+	}
+}
+
+func TestZoomExampleZoomsTheWindow(t *testing.T) {
+	g, s, tt := featureTester("Zoom", "Default", "en", 540)
+	if err := tt.Click(g.text("zoomIn")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if s.count != 1 || !tt.HasText(g.messages().Percent(110)) {
+		t.Fatalf("zoom step %d: %q", s.count, tt.Texts())
+	}
+	if err := tt.Click(g.text("zoomActualSize")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if s.count != 0 || !tt.HasText(g.messages().Percent(100)) {
+		t.Fatalf("reset zoom step %d: %q", s.count, tt.Texts())
+	}
+}
+
+func TestCodeEditorHighlightsMatches(t *testing.T) {
+	g, s, tt := featureTester("Code editor", "Editable", "en", 540)
+	if err := tt.Click(g.text("codeEditorHighlight")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Type("name")
+	tt.Frame()
+	want := strings.Count(editorSample, "name")
+	if len(s.code.TextBackgrounds) != want || want == 0 {
+		t.Fatalf("highlighted %d of %d matches", len(s.code.TextBackgrounds), want)
+	}
+	for _, bg := range s.code.TextBackgrounds {
+		if editorSample[bg.Start:bg.End] != "name" {
+			t.Fatalf("highlight covers %q", editorSample[bg.Start:bg.End])
+		}
+	}
+	s.query = ""
+	tt.Frame()
+	if len(s.code.TextBackgrounds) != 0 {
+		t.Fatal("clearing the query kept highlights")
+	}
+}
+
+func TestInlineMathKeepsItsFormulas(t *testing.T) {
+	render := inlineMath()
+	a, ok := render(`2\pi \cdot r`, 14)
+	if !ok || a.Width <= 0 || a.Height <= 0 || a.Depth < 0 || a.Draw == nil {
+		t.Fatalf("formula %+v, %v", a, ok)
+	}
+	b, _ := render(`2\pi \cdot r`, 14)
+	larger, _ := render(`2\pi \cdot r`, 28)
+	if b.Width != a.Width || larger.Width <= a.Width {
+		t.Fatalf("widths %v, %v, %v", a.Width, b.Width, larger.Width)
+	}
+	if got := texSymbols.Replace(`a^2 + 2\pi \cdot r`); got != "a² + 2π · r" {
+		t.Fatalf("symbols %q", got)
+	}
+}
+
+func TestFittedFlyoutPage(t *testing.T) {
+	g := &Gallery{language: newTranslator("ja", "en")}
+	var page string
+	ui.NewTester(func(c *ui.Context) {
+		g.withLanguage(c, func() { page = flyoutHTML(c) })
+	}, 200, 200)
+	for _, key := range []string{"flyoutFittedBody", "flyoutFittedAdd", "flyoutFittedItem"} {
+		if !strings.Contains(page, g.text(key)) {
+			t.Fatalf("page lacks %s: %s", key, page)
 		}
 	}
 }

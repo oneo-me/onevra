@@ -381,6 +381,9 @@ func exampleSystemAppearance(c *ui.Context, s *demoState) {
 		scale = 1
 	}
 	systemRow(c, m.AppearanceTextScale(), i18n.FormatNumber(c.Locale(), scale, i18n.NumberOptions{Percent: true}))
+	if s.system.native {
+		systemRow(c, m.AppearanceAppActive(), yesNo(m, mygo.App.IsActive()))
+	}
 }
 
 func exampleLanguages(c *ui.Context, s *demoState) {

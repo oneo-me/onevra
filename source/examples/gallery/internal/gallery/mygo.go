@@ -29,7 +29,7 @@ func mygoExampleFor(page galleryPage) (mygoExample, bool) {
 func mygoVariants(name string) []string {
 	switch name {
 	case "Motion":
-		return []string{"Springs", "Keyframes", "Timeline", "Animated pose", "Draggable"}
+		return []string{"Springs", "Keyframes", "Timeline", "Animated pose", "Draggable", "Frame rate"}
 	case "Code editor":
 		return []string{"Editable", "Read only"}
 	case "Diff viewer":
@@ -80,7 +80,7 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 		s.value = 8
 	}
 	if name == "Audio" {
-		s.audio.output, s.audio.volume = g.audioOutput, .8
+		s.audio.output, s.audio.volume, s.audio.window = g.audioOutput, .8, g.window
 	}
 	if name == "Canvas" {
 		s.value = 0
@@ -270,6 +270,7 @@ func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {
 	if example.name == "WebView" {
 		d := &g.mygoState("WebView", "Default", true).webView
 		d.covered = g.settings.open || g.commands.open
+		d.openURL = g.openURL
 		if g.createWebView != nil {
 			d.start(g.createWebView)
 		}

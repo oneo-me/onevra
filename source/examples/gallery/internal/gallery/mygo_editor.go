@@ -1,6 +1,9 @@
 package gallery
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 	"github.com/oneo-me/onevra/source/components"
@@ -67,6 +70,9 @@ func exampleCodeEditor(c *ui.Context, s *demoState) {
 		s.code = &editor.State{Buffer: editorBuffer(editorSample), DiffBase: editorBuffer(editorSample), WrapGuides: []int{80}}
 	}
 	s.code.Label, s.code.Font = tr(c, "codeEditorLabel"), editorFont(c)
+	components.TextBox(c, &s.query, components.TextBoxOptions{}).Label(tr(c, "codeEditorHighlight")).
+		Placeholder(tr(c, "codeEditorHighlight")).FillWidth().MaxWidth(c.Theme().Space(60))
+	highlightMatches(c, s)
 	editor.View(c, s.code).Height(320).FillWidth().Radius(8).Clip()
 	pos := s.code.CursorPos()
 	components.Text(c, msg(c).CodeEditorPosition(pos.Line+1, pos.Col+1)).TextColor(c.Theme().TextMuted)
@@ -83,4 +89,30 @@ func exampleDiffViewer(c *ui.Context, s *demoState) {
 	editor.DiffView(c, s.diff).Height(360).FillWidth().Radius(8).Clip()
 	added, deleted := s.diff.Stats()
 	components.Text(c, msg(c).DiffViewerStats(added, deleted)).TextColor(c.Theme().TextMuted)
+}
+
+// highlightMatches fills every occurrence of the query with a text
+// background, again only when the query or the text changed: backgrounds stay
+// where they are as the text is edited, and the color follows the theme.
+func highlightMatches(c *ui.Context, s *demoState) {
+	color := c.Theme().Warning.Alpha(.35)
+	key := fmt.Sprint(s.code.Buffer.Version(), color, "\x00", s.query)
+	if key == s.queried {
+		return
+	}
+	s.queried = key
+	s.code.TextBackgrounds = s.code.TextBackgrounds[:0]
+	if s.query == "" {
+		return
+	}
+	text := s.code.Buffer.String()
+	for at := 0; ; {
+		i := strings.Index(text[at:], s.query)
+		if i < 0 {
+			break
+		}
+		start := at + i
+		at = start + len(s.query)
+		s.code.TextBackgrounds = append(s.code.TextBackgrounds, editor.TextBackground{Start: start, End: at, Color: color})
+	}
 }

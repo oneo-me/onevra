@@ -115,3 +115,16 @@ func TestWebViewContentRules(t *testing.T) {
 		t.Fatalf("page lacks its sponsored banner: %s", page)
 	}
 }
+
+// Toggling Safari Tab closes the view in the frame that builds its page
+// state, to make it again in the next one.
+func TestWebViewPageStateAfterClose(t *testing.T) {
+	g := &Gallery{language: newTranslator("en", "en")}
+	d := &webViewDemo{opened: "blocked"}
+	tt := ui.NewTester(func(c *ui.Context) {
+		g.withLanguage(c, func() { webViewPageState(c, d) })
+	}, 540, 200)
+	if tt.HasText(g.text("webViewBlocked")) {
+		t.Fatalf("closed view showed page state: %q", tt.Texts())
+	}
+}

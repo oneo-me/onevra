@@ -1491,5 +1491,58 @@
   "webViewContentRulesFailed": "Content rules failed",
   "webViewSponsored": "Sponsored",
   "webViewSponsoredBody": "A demonstration ad; content rules hide it.",
-  "flyoutMaterial": "Material flyout"
+  "flyoutMaterial": "Material flyout",
+  "componentStrokes": "Strokes",
+  "componentZoom": "Zoom",
+  "frameRate": "Frame rate",
+  "glassClarity": "Clarity",
+  "boxHideMiddle": "Hide the middle box",
+  "third": "Third",
+  "strokeButtCap": "Butt cap",
+  "strokeRoundCap": "Round cap",
+  "strokeSquareCap": "Square cap",
+  "strokeMiterJoin": "Miter join",
+  "strokeRoundJoin": "Round join",
+  "strokeBevelJoin": "Bevel join",
+  "strokeDashes": "Dashed stroke",
+  "strokeDashOffset": "Dash offset",
+  "zoomActualSize": "Actual size",
+  "motionFps": "{fps} fps",
+  "@motionFps": {
+    "placeholders": {
+      "fps": {
+        "type": "int"
+      }
+    }
+  },
+  "motionDisplayRate": "Display rate",
+  "motionRecord": "Turning record",
+  "audioNotesEnded": "Notes played to the end: {count}",
+  "@audioNotesEnded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "audioPlaybackLatency": "Buffer ahead for music playback",
+  "audioMediaControls": "Show the loop in the system's media controls",
+  "webViewPageEvents": "Page events",
+  "webViewChangeThemeColor": "Change theme color",
+  "webViewPlayTone": "Play a tone",
+  "webViewOpenLink": "Open a link in a new window",
+  "webViewPopUp": "Open a pop-up after a delay",
+  "webViewThemeColor": "Theme color",
+  "webViewAudible": "Playing sound",
+  "webViewMute": "Mute page",
+  "webViewProcess": "Web content process",
+  "webViewOpened": "Opened the window the user asked for in the browser.",
+  "webViewBlocked": "Blocked a pop-up the page opened on its own.",
+  "codeEditorHighlight": "Highlight matches",
+  "appearanceAppActive": "App in front",
+  "flyoutFitted": "Fit to page",
+  "flyoutFittedBody": "This page sizes the flyout.",
+  "flyoutFittedAdd": "Add an item",
+  "flyoutFittedItem": "Item",
+  "componentHiddenElements": "Hidden elements"
 }

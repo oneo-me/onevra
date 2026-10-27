@@ -13,6 +13,8 @@ type glassDemo struct {
 	x, y float32
 	// edge indexes glassEdges, what separates the bars from the content.
 	edge int
+	// clarity clears the draggable pane, a pane large enough to frost.
+	clarity float64
 }
 
 // glassEdges maps the edge choice to the bars' styles.
@@ -40,6 +42,11 @@ func glassPreview(c *ui.Context, s *demoState, bitmap *ui.Bitmap) {
 		if components.Button(c, tr(c, "resetPosition"), components.ButtonOutline).Clicked() {
 			s.glass.x, s.glass.y = 0, 0
 		}
+	})
+	ui.Row(c).FillWidth().MaxWidth(c.Theme().Space(100)).Gap(c.Theme().Space(3)).AlignItems(ui.Center).Children(func() {
+		name := tr(c, "glassClarity")
+		components.Text(c, name).Shrink(0).SingleLine()
+		components.Slider(c, &s.glass.clarity, 0, 1).Label(name).Grow(1).MinWidth(0)
 	})
 	t := c.Theme()
 	canvas := ui.Box(c).FillWidth().Height(420).Radius(20).Clip().Border(1, t.Border).Label(tr(c, "glassCanvas"))
@@ -99,8 +106,10 @@ func glassPreview(c *ui.Context, s *demoState, bitmap *ui.Bitmap) {
 		}).Label(tr(c, "glassBottomBar"))
 		width := min(float32(220), max(0, canvas.Bounds().W-32))
 		maxX := max(0, canvas.Bounds().W-width-32)
-		pane := ui.Column(c).Absolute().Width(width).Height(120).
-			Radius(30).Material(material).Center().Gap(8).Label(tr(c, "draggableGlass"))
+		paneMaterial := material
+		paneMaterial.Clarity = float32(s.glass.clarity)
+		pane := ui.Column(c).Absolute().Width(width).Height(glassPaneHeight).
+			Radius(30).Material(paneMaterial).Center().Gap(8).Label(tr(c, "draggableGlass"))
 		if dx, dy, ok := pane.Dragged(); ok {
 			s.glass.x += dx
 			s.glass.y += dy
@@ -108,13 +117,17 @@ func glassPreview(c *ui.Context, s *demoState, bitmap *ui.Bitmap) {
 		// Keep the entire drag target between the bars and reachable after
 		// dragging or resizing.
 		s.glass.x = min(maxX, max(0, s.glass.x))
-		s.glass.y = min(max(0, 420-2*(inset+12)-120), max(0, s.glass.y))
+		s.glass.y = min(max(0, 420-2*(inset+12)-glassPaneHeight), max(0, s.glass.y))
 		pane.Left(16 + s.glass.x).Top(inset + 12 + s.glass.y).Children(func() {
 			components.Text(c, tr(c, "liquidGlass")).Bold().TextColor(color)
 			components.Text(c, tr(c, "onevraMygo")).TextColor(color)
 		})
 	})
 }
+
+// glassPaneHeight is tall enough for Clarity, which takes full effect on
+// panes from 200 DIPs.
+const glassPaneHeight = 200
 
 type glassAction struct {
 	icon  func() *ui.SVG

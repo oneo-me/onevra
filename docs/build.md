@@ -84,7 +84,7 @@ Gallery and the starter applications share one tray pattern. Change it here and 
 
 ## Gallery tray and Dock menu
 
-Gallery has no pages for these integrations; it installs both at startup. Its tray icon is the Onevra artwork from [`tray.svg`](../source/examples/gallery/internal/gallery/tray.svg) and follows the [tray convention](#tray-convention): left-click toggles a brief popover with a Show Gallery action, and the menu offers Open tray panel, Show Gallery and Quit. On macOS, right-click the Dock icon to find Show Gallery, Open Welcome and Open Settings above the standard items; closing Gallery releases the tray and restores the previous Dock menu.
+Gallery has no pages for these integrations; it installs both at startup. Its tray icon is the Onevra artwork from [`tray.svg`](../source/examples/gallery/internal/gallery/tray.svg) and follows the [tray convention](#tray-convention): left-click toggles a brief popover with a Show Gallery action, and the menu offers Open tray panel, Show Gallery and Quit. On macOS, right-click the Dock icon to find Show Gallery, marked with the Onevra glyph, Open Welcome and Open Settings above the standard items; closing Gallery releases the tray and restores the previous Dock menu.
 
 From `source/`, run `ONEVRA_NATIVE_SMOKE=1 ONEVRA_NATIVE_FOREGROUND=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNative(Tray|DockMenu)$' -count=1 -timeout 30s` in a desktop session. The checks cover installation, panel toggling, menu callbacks, language updates and cleanup, not pointer interaction or appearance.
 

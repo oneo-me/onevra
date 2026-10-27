@@ -2,8 +2,10 @@ package gallery
 
 import (
 	"math"
+	"sync/atomic"
 	"time"
 
+	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/audio"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
@@ -19,14 +21,22 @@ var audioNotes = []struct {
 
 // audioDemo synthesizes its sounds in memory on first use, so the page ships
 // no resources. Output is false in headless views, which keep the controls'
-// state without opening an audio device.
+// state without opening an audio device. ended counts the notes heard to
+// their end. mediaControls shows the loop where the system shows media, and
+// release stops the system driving it.
 type audioDemo struct {
-	output      bool
-	pluck, pad  *audio.Sound
-	loop        *audio.Player
-	looping     bool
-	played      int
-	volume, pan float64
+	output        bool
+	pluck, pad    *audio.Sound
+	loop          *audio.Player
+	looping       bool
+	played        int
+	ended         atomic.Int32
+	volume, pan   float64
+	playback      bool
+	mediaControls bool
+	release       func()
+	stopCommands  func()
+	window        func() *mygo.Window
 }
 
 func (d *audioDemo) sounds() {
@@ -41,7 +51,69 @@ func (d *audioDemo) play(speed float64) {
 		return
 	}
 	d.sounds()
-	d.pluck.NewPlayer().SetSpeed(speed).SetVolume(d.volume).SetPan(d.pan).Play()
+	player := d.pluck.NewPlayer().SetSpeed(speed).SetVolume(d.volume).SetPan(d.pan)
+	player.OnEnd(func() {
+		d.ended.Add(1)
+		d.refresh()
+	})
+	player.Play()
+}
+
+// refresh shows changes made off the page's frames, as a note's end or a
+// command of the system's media controls.
+func (d *audioDemo) refresh() {
+	if d.window == nil {
+		return
+	}
+	if w := d.window(); w != nil {
+		w.Update(func() {
+			if d.loop != nil {
+				d.looping = d.loop.Playing()
+			}
+			w.Invalidate()
+		})
+	}
+}
+
+// setLatency buffers further ahead for music, which plays on through the
+// moments the system keeps the app waiting.
+func (d *audioDemo) setLatency() {
+	if !d.output {
+		return
+	}
+	if d.playback {
+		audio.SetLatency(audio.LatencyPlayback)
+	} else {
+		audio.SetLatency(audio.LatencyInteractive)
+	}
+}
+
+// showMedia lets the system's media controls and the media keys play and
+// pause the loop, while the option is on and the loop exists.
+func (d *audioDemo) showMedia() {
+	if !d.output || d.loop == nil {
+		return
+	}
+	if !d.mediaControls {
+		d.hideMedia()
+		return
+	}
+	if d.release != nil {
+		return
+	}
+	d.release = mygo.NowPlaying.Control(d.loop)
+	d.stopCommands = mygo.NowPlaying.OnCommand(func(mygo.MediaCommand, time.Duration) { d.refresh() })
+	mygo.NowPlaying.Set(mygo.NowPlayingInfo{Title: "A major pad", Artist: "Onevra Gallery"})
+}
+
+func (d *audioDemo) hideMedia() {
+	if d.release == nil {
+		return
+	}
+	d.release()
+	d.stopCommands()
+	d.release, d.stopCommands = nil, nil
+	mygo.NowPlaying.Clear()
 }
 
 func (d *audioDemo) toggleLoop() {
@@ -59,6 +131,8 @@ func (d *audioDemo) toggleLoop() {
 	} else {
 		d.loop.Pause()
 	}
+	d.showMedia()
+	mygo.NowPlaying.Sync()
 }
 
 // mix applies the shared volume and pan to the loop as the sliders move.
@@ -69,6 +143,7 @@ func (d *audioDemo) mix() {
 }
 
 func (d *audioDemo) close() {
+	d.hideMedia()
 	if d.loop != nil {
 		d.loop.Stop()
 	}
@@ -133,6 +208,13 @@ func exampleAudio(c *ui.Context, s *demoState) {
 			d.toggleLoop()
 		}
 	})
+	components.Text(c, msg(c).AudioNotesEnded(int(d.ended.Load()))).TextColor(t.TextMuted)
+	if components.Checkbox(c, &d.playback, tr(c, "audioPlaybackLatency")).Changed() {
+		d.setLatency()
+	}
+	if components.Checkbox(c, &d.mediaControls, tr(c, "audioMediaControls")).Changed() {
+		d.showMedia()
+	}
 	changed := false
 	for _, slider := range []struct {
 		id     string

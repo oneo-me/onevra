@@ -30,6 +30,7 @@ type demoState struct {
 	richText        *richtext.Document
 	markdown        markdown.Options
 	text            string
+	query, queried  string
 	buffer          *ui.TextBuffer
 	readOnly        bool
 	choice          string
@@ -351,6 +352,18 @@ func exampleRichText(c *ui.Context, s *demoState) {
 
 func exampleBox(c *ui.Context, s *demoState) {
 	ui.Box(c).Size(120, 80).Padding(12).Radius(8).Background(c.Theme().Surface).Center().Children(func() { components.Text(c, tr(c, "box")) })
+}
+
+// exampleHidden hides the middle box, which gives its room back while what
+// is inside it keeps its state.
+func exampleHidden(c *ui.Context, s *demoState) {
+	components.Checkbox(c, &s.on, tr(c, "boxHideMiddle"))
+	ui.Row(c).Gap(8).Wrap().Children(func() {
+		for i, key := range []string{"first", "second", "third"} {
+			ui.Box(c).Key(key).Size(120, 80).Padding(12).Radius(8).Background(c.Theme().Surface).Center().
+				Hidden(i == 1 && s.on).Children(func() { components.Text(c, tr(c, key)) })
+		}
+	})
 }
 
 func exampleRow(c *ui.Context, s *demoState) {

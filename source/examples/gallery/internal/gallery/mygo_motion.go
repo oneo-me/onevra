@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"math"
 	"time"
 
 	"github.com/egoist/mygo/ui"
@@ -12,6 +13,8 @@ func exampleMotion(c *ui.Context, s *demoState) {
 	switch s.variant {
 	case "Timeline":
 		exampleTimeline(c, s)
+	case "Frame rate":
+		exampleFrameRate(c, s)
 	case "Keyframes":
 		if components.Button(c, tr(c, "motionReplay"), components.ButtonOutline).Clicked() {
 			s.count++
@@ -169,4 +172,51 @@ func exampleTimeline(c *ui.Context, s *demoState) {
 	}
 	s.seek = float32(s.value)
 	components.Text(c, msg(c).TimelineTime(int(tl.Time().Milliseconds()), int(tl.Duration().Milliseconds()))).TextColor(t.TextMuted)
+}
+
+// motionFrameRates are the record's paint rates; 0 is the display's.
+var motionFrameRates = []float32{30, 60, 0}
+
+// exampleFrameRate turns a record at a chosen rate. Its grooves are still
+// and costly, so Cache keeps them as one bitmap, and only the turning marker
+// above them paints each frame.
+func exampleFrameRate(c *ui.Context, s *demoState) {
+	t := c.Theme()
+	components.Tabs(c, &s.index, components.TabsSegmented,
+		msg(c).MotionFps(30), msg(c).MotionFps(60), tr(c, "motionDisplayRate")).List.Label(tr(c, "frameRate"))
+	fps, still := motionFrameRates[s.index], c.Preferences().ReduceMotion
+	const size = 160
+	ui.Box(c).Size(size, size).Label(tr(c, "motionRecord")).Children(func() {
+		ui.Box(c).Fill().Cache().Draw(func(p *ui.Painter, r ui.Rect) {
+			cx, cy := r.X+r.W/2, r.Y+r.H/2
+			var disc ui.Path
+			disc.Circle(cx, cy, size/2)
+			p.FillPath(&disc, ui.RGB(24, 24, 27))
+			for radius := float32(size/2 - 4); radius > 30; radius -= 2.5 {
+				var groove ui.Path
+				groove.Circle(cx, cy, radius)
+				p.StrokePath(&groove, .6, ui.RGB(63, 63, 70))
+			}
+			var label ui.Path
+			label.Circle(cx, cy, 26)
+			p.FillPath(&label, t.Accent)
+		})
+		ui.Box(c).Absolute().Fill().PassThrough().Draw(func(p *ui.Painter, r ui.Rect) {
+			// 33⅓ turns a minute.
+			angle := 0.
+			if !still {
+				angle = math.Mod(p.Now().Sub(time.Time{}).Seconds()*2*math.Pi*100/180, 2*math.Pi)
+			}
+			cx, cy := r.X+r.W/2, r.Y+r.H/2
+			sin, cos := math.Sincos(angle)
+			p.Line(cx+float32(cos)*30, cy+float32(sin)*30, cx+float32(cos)*(size/2-6), cy+float32(sin)*(size/2-6), 3, ui.RGB(244, 244, 245))
+			switch {
+			case still:
+			case fps > 0:
+				p.AnimationFrameRate(fps)
+			default:
+				p.AnimationFrame()
+			}
+		})
+	})
 }

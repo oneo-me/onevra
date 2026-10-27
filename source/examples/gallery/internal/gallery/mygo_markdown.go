@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,6 +41,7 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 			s.markdown.LoadImage = markdown.FileImages(dir)
 		}
 		s.markdown.OnLink = func(string) { s.index++ }
+		s.markdown.InlineMath = inlineMath()
 	}
 	s.markdown.Code = map[string]func(*ui.Context, *markdown.CodeBlockView){
 		"counter": func(c *ui.Context, block *markdown.CodeBlockView) {
@@ -54,3 +56,32 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 	}
 	markdown.View(c, source, &s.markdown).FillWidth()
 }
+
+// inlineMath draws math within text as the application's own renderer would:
+// a few TeX commands as their symbols, in italics. Formulas are laid out once
+// for each TeX and size, since a paragraph asks again whenever it changes.
+func inlineMath() func(tex string, size float32) (markdown.InlineObject, bool) {
+	formulas := map[string]markdown.InlineObject{}
+	return func(tex string, size float32) (markdown.InlineObject, bool) {
+		key := fmt.Sprint(size, tex)
+		if f, ok := formulas[key]; ok {
+			return f, true
+		}
+		font := ui.Font{Size: size, Italic: true}
+		layout := ui.ShapeText(texSymbols.Replace(tex), font, 0)
+		w, _ := layout.Size()
+		m := font.Metrics()
+		f := markdown.InlineObject{Width: w + size/4, Height: m.Ascent, Depth: m.Descent, Draw: func(p *ui.Painter, r ui.Rect) {
+			p.TextLayout(layout, r.X+size/8, r.Y, p.Theme().Accent)
+		}}
+		formulas[key] = f
+		return f, true
+	}
+}
+
+// texSymbols are the commands inlineMath shows as symbols; other TeX stays
+// as written.
+var texSymbols = strings.NewReplacer(
+	`\pi`, "π", `\alpha`, "α", `\beta`, "β", `\theta`, "θ", `\infty`, "∞", `\sum`, "∑",
+	`\cdot`, "·", `\times`, "×", `\leq`, "≤", `\geq`, "≥", `^2`, "²", "{", "", "}", "",
+)

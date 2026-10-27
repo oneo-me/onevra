@@ -10,7 +10,7 @@ func TestAudioControlsWithoutOutput(t *testing.T) {
 		for _, width := range []int{280, 540} {
 			g, s, tt := featureTester("Audio", "Default", lang, width)
 			if s.audio.output || s.audio.volume != .8 {
-				t.Fatalf("headless audio state: %+v", s.audio)
+				t.Fatalf("headless audio state: %+v", &s.audio)
 			}
 			for _, note := range audioNotes {
 				if err := tt.Click(note.name); err != nil {
@@ -24,10 +24,20 @@ func TestAudioControlsWithoutOutput(t *testing.T) {
 				t.Fatal(err)
 			}
 			if !s.audio.looping || s.audio.loop != nil {
-				t.Fatalf("loop toggled without a player: %+v", s.audio)
+				t.Fatalf("loop toggled without a player: %+v", &s.audio)
 			}
 			if _, ok := tt.Find(g.text("audioPauseLoop")); !ok {
 				t.Fatal("missing pause action")
+			}
+			// Headless views keep the options without reaching the system.
+			for _, label := range []string{"audioPlaybackLatency", "audioMediaControls"} {
+				if err := tt.Click(g.text(label)); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if !s.audio.playback || !s.audio.mediaControls || s.audio.release != nil {
+				t.Fatalf("headless options: playback %v, media controls %v, controlled %v",
+					s.audio.playback, s.audio.mediaControls, s.audio.release != nil)
 			}
 			pan, ok := tt.Find(g.text("audioPan"))
 			if !ok {

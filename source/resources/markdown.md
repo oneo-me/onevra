@@ -22,6 +22,8 @@ This starts a new line in the same paragraph.
 
 [Named action][action] and <https://example.com> exercise link activation.
 
+Inline math such as \(a^2 + b^2 = c^2\) and \(2\pi \cdot r\) is drawn by the application.
+
 [action]: example:action "Gallery action"
 
 ## Lists and quotes
