@@ -40,7 +40,7 @@ Scale the [development checks](docs/build.md#development-checks) to the change.
 - Update `skills/onevra/` when usage, component choices, testing or packaging change.
 - Repair documents you touch instead of only appending to them.
 - Keep READMEs equivalent. Everything else, including comments, is English except maintained translations and multilingual fixtures.
-- Record consumer-visible outcomes under `Unreleased` as one verb-first clause naming the public API, without a colon, semicolon or "which" clause.
+- Record consumer-visible outcomes under `Unreleased` as one verb-first clause naming the public API, with references such as `(#12 by @alice)` and without a colon, semicolon or "which" clause.
 - Omit refactors, layout, tests, tooling, styling, copy and gallery-only changes.
 - Prefix breaking changes with `Breaking:`, naming at most the replacement. Record a MyGo upgrade as the required version alone, first.
 - Order each version's list as `Breaking:`, Add, other, Fix; merge related entries.
