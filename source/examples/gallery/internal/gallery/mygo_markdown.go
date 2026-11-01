@@ -40,7 +40,14 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 		if dir, err := mygo.App.Path(mygo.PathResources); err == nil {
 			s.markdown.LoadImage = markdown.FileImages(dir)
 		}
-		s.markdown.OnLink = func(string) { s.index++ }
+		s.markdown.OnLink = func(url string) {
+			if strings.HasPrefix(url, "#") {
+				s.markdown.Anchor = url
+				s.markdown.AnchorVersion++
+				return
+			}
+			s.index++
+		}
 		s.markdown.InlineMath = inlineMath()
 	}
 	s.markdown.Code = map[string]func(*ui.Context, *markdown.CodeBlockView){
@@ -55,6 +62,32 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 		},
 	}
 	markdown.View(c, source, &s.markdown).FillWidth()
+}
+
+// markdownHeadings are the fixture's section headings and their slugs; the
+// fixture's own text stays in English.
+var markdownHeadings = []components.NativeSelectOption[string]{
+	{Value: "image", Label: "Image"}, {Value: "text-and-links", Label: "Text and links"},
+	{Value: "lists-and-quotes", Label: "Lists and quotes"}, {Value: "table", Label: "Table"}, {Value: "code", Label: "Code"},
+}
+
+// markdownToolbar opens the document at a heading and makes links bolder
+// from the titlebar.
+func markdownToolbar(c *ui.Context, s *demoState) {
+	bold := s.markdown.Theme != nil
+	if components.ToggleButton(c, &bold, tr(c, "markdownBoldLinks")).Changed() {
+		s.markdown.Theme = nil
+		if bold {
+			// Zero values take the window theme's defaults.
+			s.markdown.Theme = &markdown.Theme{LinkWeight: 600}
+		}
+	}
+	heading := components.NativeSelect(c, &s.choice, markdownHeadings)
+	heading.Trigger.Label(tr(c, "markdownGoToHeading")).Children(func() { components.Text(c, tr(c, "markdownGoToHeading")).SingleLine() })
+	if heading.Changed() {
+		s.markdown.Anchor = s.choice
+		s.markdown.AnchorVersion++
+	}
 }
 
 // inlineMath draws math within text as the application's own renderer would:

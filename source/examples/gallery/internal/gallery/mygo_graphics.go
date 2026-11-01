@@ -123,6 +123,23 @@ func exampleGradients(c *ui.Context, s *demoState) {
 			components.Text(c, name).Shrink(0).SingleLine()
 			components.Slider(c, &s.value, 0, 80).Label(name).Grow(1).MinWidth(0)
 		})
+	case "Radial":
+		ui.Row(c).Gap(t.Space(4)).Wrap().Children(func() {
+			// A glow fades from a point to nothing; a painted spotlight lights
+			// a surface from its own center.
+			swatch("radial", tr(c, "gradientRadial")).Background(t.Surface).RadialGradient(ui.RadialGradient{
+				Stops:  []ui.GradientStop{{Color: t.Accent.Alpha(.8), At: 0}, {Color: ui.Transparent, At: 1}},
+				Radius: float32(s.value) + 20, Oklab: s.on,
+			})
+			swatch("spotlight", tr(c, "gradientSpotlight")).Draw(func(p *ui.Painter, r ui.Rect) {
+				p.FillRadialGradient(r, ui.RadialGradient{
+					Stops:  []ui.GradientStop{{Color: ui.RGB(253, 224, 71), At: 0}, {Color: ui.RGB(234, 88, 12), At: .5}, {Color: ui.RGB(30, 27, 75), At: 1}},
+					Center: ui.Point{X: .3, Y: .3}, Radius: float32(s.value) + 20, Oklab: s.on,
+				}, t.Radius*2)
+			})
+		})
+		gradientRadius(c, s)
+		components.Checkbox(c, &s.on, tr(c, "gradientOklab"))
 	default:
 		ui.Row(c).Gap(t.Space(4)).Wrap().Children(func() {
 			swatch("linear", tr(c, "gradientStops")).LinearGradient(ui.LinearGradient{Stops: spectrum, Angle: 90 + float32(s.value), Oklab: s.on})
@@ -130,6 +147,14 @@ func exampleGradients(c *ui.Context, s *demoState) {
 		gradientAngle(c, s)
 		components.Checkbox(c, &s.on, tr(c, "gradientOklab"))
 	}
+}
+
+func gradientRadius(c *ui.Context, s *demoState) {
+	ui.Row(c).FillWidth().MaxWidth(c.Theme().Space(100)).Gap(c.Theme().Space(3)).AlignItems(ui.Center).Children(func() {
+		name := tr(c, "gradientRadius")
+		components.Text(c, name).Shrink(0).SingleLine()
+		components.Slider(c, &s.value, 0, 160).Label(name).Grow(1).MinWidth(0)
+	})
 }
 
 func gradientAngle(c *ui.Context, s *demoState) {

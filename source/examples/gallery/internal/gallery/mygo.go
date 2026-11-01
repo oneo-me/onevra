@@ -13,7 +13,7 @@ type mygoExample struct {
 	build       func(*ui.Context, *demoState)
 }
 
-var mygoGroups = []string{"Text input", "Content display", "Code & diffs", "Charts", "Feedback & overlays", "Layout & containers", "Games"}
+var mygoGroups = []string{"Actions & navigation", "Text input", "Selection & values", "Content display", "Code & diffs", "Charts", "Feedback & overlays", "Layout & containers", "Games"}
 
 var demoImage = ui.MustParseSVG([]byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100"><rect width="180" height="100" rx="12" fill="#dbeafe"/><circle cx="140" cy="28" r="15" fill="#fbbf24"/><path d="M0 100L55 25L110 100Z" fill="#2563eb"/><path d="M65 100L120 45L180 100Z" fill="#059669"/></svg>`))
 
@@ -35,11 +35,13 @@ func mygoVariants(name string) []string {
 	case "Diff viewer":
 		return []string{"Side by side", "Unified"}
 	case "Gradients & blur":
-		return []string{"Gradient stops", "Conic", "Borders", "Blur"}
+		return []string{"Gradient stops", "Conic", "Radial", "Borders", "Blur"}
 	case "Shaders":
 		return []string{"Fragment", "Text and paths", "Element effect", "Backdrop"}
 	case "Transforms":
 		return []string{"Editable controls", "Perspective"}
+	case "Scroll bars":
+		return []string{"Hidden", "Custom view"}
 	case "Toggle", "ToggleGroup", "Checkbox", "Switch":
 		return []string{"Off", "On", "Disabled"}
 	case "CheckboxGroup":
@@ -81,6 +83,18 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 	}
 	if name == "Audio" {
 		s.audio.output, s.audio.volume, s.audio.window = g.audioOutput, .8, g.window
+	}
+	switch name {
+	case "Markdown":
+		s.choice = ""
+	case "DecimalInput":
+		s.text = "1234.50"
+	case "Input styling":
+		s.text = ""
+	case "Ignore input":
+		s.tags = nil
+	case "Scroll bars":
+		s.value = 0
 	}
 	if name == "Canvas" {
 		s.value = 0
@@ -171,7 +185,7 @@ func (g *Gallery) mygoHost(c *ui.Context, page func()) {
 // mygoToolbars hold page-level sample actions, which the example's titlebar
 // shows after its title so the content stays with the example itself.
 var mygoToolbars = map[string]func(*ui.Context, *demoState){
-	"Rich text editor": richTextToolbar, "Markdown stream": markdownStreamToolbar, "Terminal": terminalToolbar,
+	"Rich text editor": richTextToolbar, "Markdown": markdownToolbar, "Markdown stream": markdownStreamToolbar, "Terminal": terminalToolbar,
 	"Loading indicators": loadingToolbar,
 }
 

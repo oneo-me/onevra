@@ -92,7 +92,7 @@ type Detail struct {
 // size, share, measure and caption. Empty replaces the tiles when nothing has a positive size
 // (EmptyText, default "—", otherwise). AnimationDuration controls drilling and
 // data transitions: zero uses 400 ms, negative disables them, and Reduced
-// Motion always skips them.
+// Motion and ui.Context.DisableAnimations always skip them.
 type Options struct {
 	Label, Description, EmptyText string
 	Height                        float32

@@ -38,7 +38,8 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 
 | Page | Integration boundary |
 | --- | --- |
-| Content display / Markdown | MyGo `ui/markdown` over a cached [fixture](../../source/resources/markdown.md), with resource images, gallery-owned links, an interactive custom code block and a gallery-drawn inline math renderer |
+| Content display / Markdown | MyGo `ui/markdown` over a cached [fixture](../../source/resources/markdown.md), with resource images, gallery-owned links, heading anchors, an interactive custom code block and a gallery-drawn inline math renderer |
+| Content display / Video | MyGo `ui.Video` looping a GIF drawn in memory; the player is made on first show and closed with Gallery |
 | Content display / Chat | Conversation folding, bounded details, composer pickers, attachments, context meter and usage limits, and a simulated streamed reply started from Send or the titlebar; no model or file access |
 | Plugins / Terminal | MyGo shell session, retained across navigation and closed with Gallery; titlebar find and clear, and a menu mirroring the session into a second terminal |
 | Charts / Data charts | Bar, line, area, stacked bar, donut, bubble and split bar charts of the public chart component in fixed tiles, each with its own selection and title-row tools that update data, hide the legend, show the empty state and add or remove bubbles |

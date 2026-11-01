@@ -76,7 +76,8 @@ type Options struct {
 	Detail                        func(*ui.Context, Selection)
 	Empty                         func(*ui.Context)
 	// AnimationDuration controls numeric data transitions: zero uses 300 ms,
-	// negative disables them. Reduced Motion always skips intermediate frames.
+	// negative disables them. Reduced Motion and
+	// ui.Context.DisableAnimations always skip intermediate frames.
 	// Initial data, category/series changes and missing-value changes appear
 	// immediately. Tooltips and accessible values always report the latest data.
 	AnimationDuration time.Duration

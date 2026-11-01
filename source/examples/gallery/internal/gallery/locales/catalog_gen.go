@@ -11086,3 +11086,295 @@ func ComponentHiddenElements() string { return In(i18n.Locale()).ComponentHidden
 func (msgs Messages) ComponentHiddenElements() string {
 	return Catalog.Format(msgs.locale, "componentHiddenElements", nil)
 }
+
+// VariantRadial says "Radial"
+// in the language the app shows.
+func VariantRadial() string { return In(i18n.Locale()).VariantRadial() }
+
+// VariantRadial says "Radial"
+// in the language of msgs.
+func (msgs Messages) VariantRadial() string {
+	return Catalog.Format(msgs.locale, "variantRadial", nil)
+}
+
+// GradientRadial says "Radial glow"
+// in the language the app shows.
+func GradientRadial() string { return In(i18n.Locale()).GradientRadial() }
+
+// GradientRadial says "Radial glow"
+// in the language of msgs.
+func (msgs Messages) GradientRadial() string {
+	return Catalog.Format(msgs.locale, "gradientRadial", nil)
+}
+
+// GradientSpotlight says "Painted spotlight"
+// in the language the app shows.
+func GradientSpotlight() string { return In(i18n.Locale()).GradientSpotlight() }
+
+// GradientSpotlight says "Painted spotlight"
+// in the language of msgs.
+func (msgs Messages) GradientSpotlight() string {
+	return Catalog.Format(msgs.locale, "gradientSpotlight", nil)
+}
+
+// GradientRadius says "Radius"
+// in the language the app shows.
+func GradientRadius() string { return In(i18n.Locale()).GradientRadius() }
+
+// GradientRadius says "Radius"
+// in the language of msgs.
+func (msgs Messages) GradientRadius() string {
+	return Catalog.Format(msgs.locale, "gradientRadius", nil)
+}
+
+// MarkdownBoldLinks says "Bold links"
+// in the language the app shows.
+func MarkdownBoldLinks() string { return In(i18n.Locale()).MarkdownBoldLinks() }
+
+// MarkdownBoldLinks says "Bold links"
+// in the language of msgs.
+func (msgs Messages) MarkdownBoldLinks() string {
+	return Catalog.Format(msgs.locale, "markdownBoldLinks", nil)
+}
+
+// MarkdownGoToHeading says "Go to heading"
+// in the language the app shows.
+func MarkdownGoToHeading() string { return In(i18n.Locale()).MarkdownGoToHeading() }
+
+// MarkdownGoToHeading says "Go to heading"
+// in the language of msgs.
+func (msgs Messages) MarkdownGoToHeading() string {
+	return Catalog.Format(msgs.locale, "markdownGoToHeading", nil)
+}
+
+// RichTextBookLayout says "Book layout"
+// in the language the app shows.
+func RichTextBookLayout() string { return In(i18n.Locale()).RichTextBookLayout() }
+
+// RichTextBookLayout says "Book layout"
+// in the language of msgs.
+func (msgs Messages) RichTextBookLayout() string {
+	return Catalog.Format(msgs.locale, "richTextBookLayout", nil)
+}
+
+// DecimalAmount says "Amount"
+// in the language the app shows.
+func DecimalAmount() string { return In(i18n.Locale()).DecimalAmount() }
+
+// DecimalAmount says "Amount"
+// in the language of msgs.
+func (msgs Messages) DecimalAmount() string {
+	return Catalog.Format(msgs.locale, "decimalAmount", nil)
+}
+
+// InputConfirmDelete says "Confirm deletion"
+// in the language the app shows.
+func InputConfirmDelete() string { return In(i18n.Locale()).InputConfirmDelete() }
+
+// InputConfirmDelete says "Confirm deletion"
+// in the language of msgs.
+func (msgs Messages) InputConfirmDelete() string {
+	return Catalog.Format(msgs.locale, "inputConfirmDelete", nil)
+}
+
+// InputTypeDelete says "Type DELETE to confirm"
+// in the language the app shows.
+func InputTypeDelete() string { return In(i18n.Locale()).InputTypeDelete() }
+
+// InputTypeDelete says "Type DELETE to confirm"
+// in the language of msgs.
+func (msgs Messages) InputTypeDelete() string {
+	return Catalog.Format(msgs.locale, "inputTypeDelete", nil)
+}
+
+// InputBlockCaret says "Block caret"
+// in the language the app shows.
+func InputBlockCaret() string { return In(i18n.Locale()).InputBlockCaret() }
+
+// InputBlockCaret says "Block caret"
+// in the language of msgs.
+func (msgs Messages) InputBlockCaret() string {
+	return Catalog.Format(msgs.locale, "inputBlockCaret", nil)
+}
+
+// InputDottedLink says "A link marked with dots"
+// in the language the app shows.
+func InputDottedLink() string { return In(i18n.Locale()).InputDottedLink() }
+
+// InputDottedLink says "A link marked with dots"
+// in the language of msgs.
+func (msgs Messages) InputDottedLink() string {
+	return Catalog.Format(msgs.locale, "inputDottedLink", nil)
+}
+
+// PopoverMenuSortBy says "Sort by"
+// in the language the app shows.
+func PopoverMenuSortBy() string { return In(i18n.Locale()).PopoverMenuSortBy() }
+
+// PopoverMenuSortBy says "Sort by"
+// in the language of msgs.
+func (msgs Messages) PopoverMenuSortBy() string {
+	return Catalog.Format(msgs.locale, "popoverMenuSortBy", nil)
+}
+
+// PopoverMenuDescending says "Descending"
+// in the language the app shows.
+func PopoverMenuDescending() string { return In(i18n.Locale()).PopoverMenuDescending() }
+
+// PopoverMenuDescending says "Descending"
+// in the language of msgs.
+func (msgs Messages) PopoverMenuDescending() string {
+	return Catalog.Format(msgs.locale, "popoverMenuDescending", nil)
+}
+
+// PopoverMenuDescendingOrder says "{order}, descending"
+// in the language the app shows.
+func PopoverMenuDescendingOrder(order string) string {
+	return In(i18n.Locale()).PopoverMenuDescendingOrder(order)
+}
+
+// PopoverMenuDescendingOrder says "{order}, descending"
+// in the language of msgs.
+func (msgs Messages) PopoverMenuDescendingOrder(order string) string {
+	return Catalog.Format(msgs.locale, "popoverMenuDescendingOrder", map[string]any{"order": order})
+}
+
+// VideoWaves says "Rolling waves"
+// in the language the app shows.
+func VideoWaves() string { return In(i18n.Locale()).VideoWaves() }
+
+// VideoWaves says "Rolling waves"
+// in the language of msgs.
+func (msgs Messages) VideoWaves() string {
+	return Catalog.Format(msgs.locale, "videoWaves", nil)
+}
+
+// VariantHidden says "Hidden"
+// in the language the app shows.
+func VariantHidden() string { return In(i18n.Locale()).VariantHidden() }
+
+// VariantHidden says "Hidden"
+// in the language of msgs.
+func (msgs Messages) VariantHidden() string {
+	return Catalog.Format(msgs.locale, "variantHidden", nil)
+}
+
+// VariantCustomView says "Custom view"
+// in the language the app shows.
+func VariantCustomView() string { return In(i18n.Locale()).VariantCustomView() }
+
+// VariantCustomView says "Custom view"
+// in the language of msgs.
+func (msgs Messages) VariantCustomView() string {
+	return Catalog.Format(msgs.locale, "variantCustomView", nil)
+}
+
+// ScrollbarsHidden says "Cards without scroll bars"
+// in the language the app shows.
+func ScrollbarsHidden() string { return In(i18n.Locale()).ScrollbarsHidden() }
+
+// ScrollbarsHidden says "Cards without scroll bars"
+// in the language of msgs.
+func (msgs Messages) ScrollbarsHidden() string {
+	return Catalog.Format(msgs.locale, "scrollbarsHidden", nil)
+}
+
+// ScrollbarsCustomView says "A view that scrolls itself"
+// in the language the app shows.
+func ScrollbarsCustomView() string { return In(i18n.Locale()).ScrollbarsCustomView() }
+
+// ScrollbarsCustomView says "A view that scrolls itself"
+// in the language of msgs.
+func (msgs Messages) ScrollbarsCustomView() string {
+	return Catalog.Format(msgs.locale, "scrollbarsCustomView", nil)
+}
+
+// ScrollbarsCard says "Card {number}"
+// in the language the app shows.
+func ScrollbarsCard(number int) string { return In(i18n.Locale()).ScrollbarsCard(number) }
+
+// ScrollbarsCard says "Card {number}"
+// in the language of msgs.
+func (msgs Messages) ScrollbarsCard(number int) string {
+	return Catalog.Format(msgs.locale, "scrollbarsCard", map[string]any{"number": number})
+}
+
+// IgnoreInputRestore says "Restore rows"
+// in the language the app shows.
+func IgnoreInputRestore() string { return In(i18n.Locale()).IgnoreInputRestore() }
+
+// IgnoreInputRestore says "Restore rows"
+// in the language of msgs.
+func (msgs Messages) IgnoreInputRestore() string {
+	return Catalog.Format(msgs.locale, "ignoreInputRestore", nil)
+}
+
+// TypesettingLines says "{count, plural, one {# line} other {# lines}}"
+// in the language the app shows.
+func TypesettingLines(count int) string { return In(i18n.Locale()).TypesettingLines(count) }
+
+// TypesettingLines says "{count, plural, one {# line} other {# lines}}"
+// in the language of msgs.
+func (msgs Messages) TypesettingLines(count int) string {
+	return Catalog.Format(msgs.locale, "typesettingLines", map[string]any{"count": count})
+}
+
+// TypesettingJustify says "Justify"
+// in the language the app shows.
+func TypesettingJustify() string { return In(i18n.Locale()).TypesettingJustify() }
+
+// TypesettingJustify says "Justify"
+// in the language of msgs.
+func (msgs Messages) TypesettingJustify() string {
+	return Catalog.Format(msgs.locale, "typesettingJustify", nil)
+}
+
+// TypesettingWidth says "Width"
+// in the language the app shows.
+func TypesettingWidth() string { return In(i18n.Locale()).TypesettingWidth() }
+
+// TypesettingWidth says "Width"
+// in the language of msgs.
+func (msgs Messages) TypesettingWidth() string {
+	return Catalog.Format(msgs.locale, "typesettingWidth", nil)
+}
+
+// ComponentInputStyling says "Input styling"
+// in the language the app shows.
+func ComponentInputStyling() string { return In(i18n.Locale()).ComponentInputStyling() }
+
+// ComponentInputStyling says "Input styling"
+// in the language of msgs.
+func (msgs Messages) ComponentInputStyling() string {
+	return Catalog.Format(msgs.locale, "componentInputStyling", nil)
+}
+
+// ComponentIgnoreInput says "Ignore input"
+// in the language the app shows.
+func ComponentIgnoreInput() string { return In(i18n.Locale()).ComponentIgnoreInput() }
+
+// ComponentIgnoreInput says "Ignore input"
+// in the language of msgs.
+func (msgs Messages) ComponentIgnoreInput() string {
+	return Catalog.Format(msgs.locale, "componentIgnoreInput", nil)
+}
+
+// ComponentScrollBars says "Scroll bars"
+// in the language the app shows.
+func ComponentScrollBars() string { return In(i18n.Locale()).ComponentScrollBars() }
+
+// ComponentScrollBars says "Scroll bars"
+// in the language of msgs.
+func (msgs Messages) ComponentScrollBars() string {
+	return Catalog.Format(msgs.locale, "componentScrollBars", nil)
+}
+
+// ComponentTypesetting says "Typesetting"
+// in the language the app shows.
+func ComponentTypesetting() string { return In(i18n.Locale()).ComponentTypesetting() }
+
+// ComponentTypesetting says "Typesetting"
+// in the language of msgs.
+func (msgs Messages) ComponentTypesetting() string {
+	return Catalog.Format(msgs.locale, "componentTypesetting", nil)
+}

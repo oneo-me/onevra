@@ -212,7 +212,7 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 		}
 	}
 	p.lo, p.hi = honeycombBounds(p.cells)
-	reduce := c.Preferences().ReduceMotion
+	reduce := c.Preferences().ReduceMotion || c.Instant()
 	chosen := ""
 	if options.Selected != p.selected {
 		p.selected = options.Selected

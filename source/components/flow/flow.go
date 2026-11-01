@@ -132,7 +132,7 @@ func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
 		state = ui.Local(root, "onevra.flow", func() State { return State{} })
 	}
 	v := &state.view
-	v.update(data, opts, c.Preferences().ReduceMotion)
+	v.update(data, opts, c.Preferences().ReduceMotion || c.Instant())
 	root.Children(func() {
 		if len(v.nodes) == 0 {
 			ui.Column(c).Fill().AlignItems(ui.Center).Justify(ui.Center).Padding(t.Space(6)).Children(func() {

@@ -165,7 +165,7 @@ func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
 	if palette.Background != (ui.Color{}) {
 		root.Background(palette.Background)
 	}
-	reduce := c.Preferences().ReduceMotion
+	reduce := c.Preferences().ReduceMotion || c.Instant()
 	g := &state.graphView
 	g.update(data, opts, palette, t.Dark, reduce)
 	g.measureLabels(c)

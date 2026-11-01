@@ -1544,5 +1544,55 @@
   "flyoutFittedBody": "This page sizes the flyout.",
   "flyoutFittedAdd": "Add an item",
   "flyoutFittedItem": "Item",
-  "componentHiddenElements": "Hidden elements"
+  "componentHiddenElements": "Hidden elements",
+  "variantRadial": "Radial",
+  "gradientRadial": "Radial glow",
+  "gradientSpotlight": "Painted spotlight",
+  "gradientRadius": "Radius",
+  "markdownBoldLinks": "Bold links",
+  "markdownGoToHeading": "Go to heading",
+  "richTextBookLayout": "Book layout",
+  "decimalAmount": "Amount",
+  "inputConfirmDelete": "Confirm deletion",
+  "inputTypeDelete": "Type DELETE to confirm",
+  "inputBlockCaret": "Block caret",
+  "inputDottedLink": "A link marked with dots",
+  "popoverMenuSortBy": "Sort by",
+  "popoverMenuDescending": "Descending",
+  "popoverMenuDescendingOrder": "{order}, descending",
+  "@popoverMenuDescendingOrder": {
+    "placeholders": {
+      "order": {
+        "type": "String"
+      }
+    }
+  },
+  "videoWaves": "Rolling waves",
+  "variantHidden": "Hidden",
+  "variantCustomView": "Custom view",
+  "scrollbarsHidden": "Cards without scroll bars",
+  "scrollbarsCustomView": "A view that scrolls itself",
+  "scrollbarsCard": "Card {number}",
+  "@scrollbarsCard": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "ignoreInputRestore": "Restore rows",
+  "typesettingLines": "{count, plural, one {# line} other {# lines}}",
+  "@typesettingLines": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "typesettingJustify": "Justify",
+  "typesettingWidth": "Width",
+  "componentInputStyling": "Input styling",
+  "componentIgnoreInput": "Ignore input",
+  "componentScrollBars": "Scroll bars",
+  "componentTypesetting": "Typesetting"
 }

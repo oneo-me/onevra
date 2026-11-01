@@ -36,7 +36,7 @@ The [chart component](../../source/components/chart/chart.go) composes categoric
 
 Applications retain data and state, provide stable series or slice identities, and supply localized labels and formatting. Cartesian and split bar legends hide data; donut and bubble legends select slices. Selection exposes formatted values to assistive technology. Empty and detail slots take application content instead of business-specific variants. See the [runnable usage example](../../source/components/chart/example_test.go) and API comments for data and state contracts.
 
-Numeric updates transition together through MyGo's animation channel, including Cartesian domains and donut boundaries; bubbles first show packed, then spring, and added ones grow in. Retargeting continues from the current picture; Reduced Motion skips the transition. Split bar edges follow springs; its figures roll with MyGo's numeric content transitions. Data-shape changes appear immediately, and selection details report the latest application values.
+Numeric updates transition together through MyGo's animation channel, including Cartesian domains and donut boundaries; bubbles first show packed, then spring, and added ones grow in. Retargeting continues from the current picture; Reduced Motion and `DisableAnimations` skip the transition. Split bar edges follow springs; its figures roll with MyGo's numeric content transitions. Data-shape changes appear immediately, and selection details report the latest application values.
 
 These views target bounded categorical datasets, with work proportional to the data; applications own aggregation or sampling. Continuous/time axes, zooming and specialized charts can compose upstream primitives. The component reuses MyGo's Cartesian selection, with a coordinate adaptation for transformed plots in 0.4.3; donut and bubble selection compose MyGo's shortcuts with shape hit testing.
 
@@ -48,7 +48,7 @@ The [treemap component](../../source/components/treemap/treemap.go) paints squar
 
 The [graph component](../../source/components/graph/graph.go) draws a force-directed graph. Applications supply stable node IDs, groups, sizes, colors and edge styles, and open nodes. Groups seed placement and even hue spacing; palettes, colors, forces, hover depth and empty or overlay slots are replaceable.
 
-Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial ticks run in per-frame budgets before showing; Reduced Motion settles at once.
+Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial ticks run in per-frame budgets before showing; Reduced Motion and `DisableAnimations` settle at once.
 
 [Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo reports pinches as `ui.InputZoom` but does not tell smoothed mice from touchpads; a macOS adapter reads scroll phases.
 

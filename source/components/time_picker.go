@@ -83,10 +83,7 @@ func TimePicker(c *ui.Context, value *time.Time) *TimeControl {
 				if index == 1 {
 					current, count = &st.minute, 60
 				}
-				// MyGo has no per-view scrollbar visibility option. Reserve the
-				// popup's full height from the track, leaving no visible or
-				// draggable bar while retaining native wheel scrolling.
-				column := ScrollView(c, ScrollViewOptions{}).ScrollbarInsets(0, 0, t.Space(64), 0).
+				column := ScrollView(c, ScrollViewOptions{}).Scrollbars(false).
 					FillWidth().Grow(1).Focusable().Role(ui.RoleList).Label(label)
 				columns[index] = column
 				if index == 0 {

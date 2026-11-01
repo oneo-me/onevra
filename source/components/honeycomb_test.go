@@ -728,6 +728,27 @@ func TestHoneycombSlidesAsItemsComeAndGo(t *testing.T) {
 	}
 }
 
+func TestHoneycombJumpsWhenAnimationsAreDisabled(t *testing.T) {
+	items := honeycombItems(9)
+	selected, instant := "p00", false
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.Palette(false))
+		if instant {
+			c.DisableAnimations()
+		}
+		ui.Column(c).Fill().Children(func() {
+			Honeycomb(c, HoneycombOptions{Items: items, Selected: selected, SelectedLabel: "Item"})
+		})
+	}, 600, 300)
+	settleHoneycomb(tt)
+	center, _ := tt.Find("Item")
+	selected, instant = "p08", true
+	tt.Frame()
+	if r, _ := tt.Find("Item"); r != center {
+		t.Fatalf("selection glided with animations disabled: %+v, middle %+v", r, center)
+	}
+}
+
 func TestHoneycombCaptionsTheMiddleItem(t *testing.T) {
 	items := honeycombItems(7)
 	for i := range items {

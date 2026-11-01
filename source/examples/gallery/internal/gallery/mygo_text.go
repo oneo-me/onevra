@@ -12,7 +12,7 @@ import (
 
 // Editable and streamed fixture content stays in English, as other sample
 // documents do.
-const richTextSample = "# Release notes\n\nEdit **bold**, *italic* and `code` text, or type `- ` to start a list.\n\n- [x] Draft the summary\n- [ ] Review the screenshots\n"
+const richTextSample = "# Release notes\n\nEdit **bold**, *italic* and `code` text, or type `- ` to start a list.\n\nA book indents every paragraph after the first, while a screen sets paragraphs apart with room between them.\n\n- [x] Draft the summary\n- [ ] Review the screenshots\n"
 
 const markdownReply = "## Streaming replies\n\nMarkdown arrives **a few words at a time**, and the unfinished tail already shows as what it will become.\n\n- Lists, *emphasis* and `code` render as they stream\n- Finished blocks are never parsed again\n\n```go\nfmt.Println(\"Hello, Onevra\")\n```\n"
 
@@ -42,6 +42,7 @@ func richTextToolbar(c *ui.Context, s *demoState) {
 			format.apply()
 		}
 	}
+	components.ToggleButton(c, &s.on, tr(c, "richTextBookLayout")).KeepFocus()
 }
 
 // exampleRichTextEditor edits attributed text in page memory only, filling
@@ -49,9 +50,14 @@ func richTextToolbar(c *ui.Context, s *demoState) {
 func exampleRichTextEditor(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	room := t.Space(6)
+	// Book layout indents paragraphs in place of the room between them.
+	indent, spacing := float32(0), float32(.75)
+	if s.on {
+		indent, spacing = 1.5, 0
+	}
 	richtext.Editor(c, richTextDocument(s), richtext.EditorOptions{
 		Label: tr(c, "richTextLabel"),
-		Theme: &richtext.Theme{Padding: [2]float32{room, room}},
+		Theme: &richtext.Theme{Padding: [2]float32{room, room}, FirstLineIndent: indent, ParagraphSpacing: spacing},
 	}).Fill().Radius(0).Background(ui.Transparent).Border(0, ui.Transparent)
 }
 

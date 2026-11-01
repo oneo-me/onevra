@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"fmt"
+	"math"
 	"slices"
 	"strings"
 	"testing"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestCodeEditorExample(t *testing.T) {
@@ -432,5 +434,190 @@ func TestFittedFlyoutPage(t *testing.T) {
 		if !strings.Contains(page, g.text(key)) {
 			t.Fatalf("page lacks %s: %s", key, page)
 		}
+	}
+}
+
+func TestDecimalInputKeepsExactAmounts(t *testing.T) {
+	g, s, tt := featureTester("DecimalInput", "Default", "zh-Hans", 540)
+	// Click the text, left of the step buttons.
+	r, ok := tt.Find(g.text("decimalAmount"))
+	if !ok {
+		t.Fatalf("missing input: %q", tt.Texts())
+	}
+	tt.ClickAt(r.X+12, r.Y+r.H/2)
+	tt.Key(ui.Cmd, ui.KeyA)
+	tt.Type("19.99")
+	tt.Frame()
+	if s.text != "19.99" || !tt.HasText("19.99") {
+		t.Fatalf("amount %q: %q", s.text, tt.Texts())
+	}
+	// More decimals than the step's leave the amount as it was.
+	tt.Type("9")
+	tt.Frame()
+	if s.text != "19.99" {
+		t.Fatalf("rounded to %q", s.text)
+	}
+}
+
+func TestPopoverMenusChooseRadioItems(t *testing.T) {
+	g, s, tt := featureTester("PopoverMenuButton", "Default", "en", 540)
+	if err := tt.Click(g.text("popoverMenuSortBy")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if err := tt.Click(g.text("date")); err != nil {
+		t.Fatalf("drawn menu: %v, %q", err, tt.Texts())
+	}
+	tt.Frame()
+	if s.index != 1 || !tt.HasText(g.text("date")) {
+		t.Fatalf("sort %d: %q", s.index, tt.Texts())
+	}
+	if err := tt.RightClick(g.text("rightClickHere")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if err := tt.Click(g.text("duplicate")); err != nil {
+		t.Fatalf("context menu: %v, %q", err, tt.Texts())
+	}
+	tt.Frame()
+	if s.count != 1 || !tt.HasText(g.messages().LabelCount(g.text("duplicate"), 1)) {
+		t.Fatalf("action %q %d: %q", s.choice, s.count, tt.Texts())
+	}
+}
+
+func TestIgnoredDeleteButtonsShowOnHover(t *testing.T) {
+	g, s, tt := featureTester("Ignore input", "Default", "en", 540)
+	// buttonOf returns the middle of a row's delete button, after its label.
+	buttonOf := func(key string) (float32, float32) {
+		label, ok := tt.Find(g.text(key))
+		if !ok {
+			t.Fatalf("missing row %s: %q", key, tt.Texts())
+		}
+		return label.X + label.W + 20, label.Y + label.H/2
+	}
+	// A press on a hidden button, from outside its row, reaches nothing.
+	tt.Move(0, 0)
+	tt.Frame()
+	x, y := buttonOf("first")
+	tt.Press(x, y)
+	tt.Release(x, y)
+	tt.Frame()
+	if len(s.tags) != 0 {
+		t.Fatalf("a hidden button deleted %v", s.tags)
+	}
+	// Under the pointer, the row shows its button, which deletes it.
+	x, y = buttonOf("second")
+	tt.Move(x, y)
+	tt.Frame()
+	tt.ClickAt(x, y)
+	tt.Frame()
+	if len(s.tags) != 1 || s.tags[0] != "second" || tt.HasText(g.text("second")) {
+		t.Fatalf("deleted %v: %q", s.tags, tt.Texts())
+	}
+	if err := tt.Click(g.text("ignoreInputRestore")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if len(s.tags) != 0 || !tt.HasText(g.text("second")) {
+		t.Fatalf("restore left %v", s.tags)
+	}
+}
+
+func TestThemedPreviewsKeepTheirPalettes(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		g, s, tt := featureTester("Themed", "Default", "zh-Hans", 540)
+		tt.SetDark(dark)
+		tt.Frame()
+		for _, key := range []string{"light", "dark"} {
+			if !tt.HasText(g.text(key)) {
+				t.Fatalf("missing %s preview: %q", key, tt.Texts())
+			}
+		}
+		if err := tt.Click(g.text("notifications")); err != nil {
+			t.Fatal(err)
+		}
+		if !s.on {
+			t.Fatal("preview switch did not toggle")
+		}
+	}
+}
+
+func TestVideoPlaysAndPauses(t *testing.T) {
+	g, s, tt := featureTester("Video", "Default", "en", 540)
+	p := s.video.player
+	if p == nil || s.video.err != nil || !p.Playing() || !p.Loop() {
+		t.Fatalf("player %v, %v", p, s.video.err)
+	}
+	if w, h := p.Size(); w != 160 || h != 90 {
+		t.Fatalf("frame size %dx%d", w, h)
+	}
+	if _, ok := tt.Find(g.text("videoWaves")); !ok {
+		t.Fatalf("missing video: %q", tt.Texts())
+	}
+	if err := tt.Click(g.text("timelinePause")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if p.Playing() || !tt.HasText(g.text("timelinePlay")) {
+		t.Fatal("video did not pause")
+	}
+	s.video.close()
+}
+
+func TestCustomScrollViewScrollsItself(t *testing.T) {
+	g, s, tt := featureTester("Scroll bars", "Custom view", "en", 540)
+	r, ok := tt.Find(g.text("scrollbarsCustomView"))
+	if !ok {
+		t.Fatalf("missing view: %q", tt.Texts())
+	}
+	tt.Scroll(r.X+r.W/2, r.Y+r.H/2, 0, 120)
+	tt.Frame()
+	if s.value != 120 {
+		t.Fatalf("offset %v after scrolling down", s.value)
+	}
+	// The offset stops at either end of the rows.
+	tt.Scroll(r.X+r.W/2, r.Y+r.H/2, 0, -1000)
+	tt.Frame()
+	if s.value != 0 {
+		t.Fatalf("offset %v past the top", s.value)
+	}
+	tt.Scroll(r.X+r.W/2, r.Y+r.H/2, 0, 1e5)
+	tt.Frame()
+	if want := float64(scrollRows*theme.Palette(false).Space(6) - r.H); math.Abs(s.value-want) > .01 {
+		t.Fatalf("offset %v past the end, want %v", s.value, want)
+	}
+}
+
+func TestTypesettingJustifiesLines(t *testing.T) {
+	g, s, tt := featureTester("Typesetting", "Default", "en", 720)
+	if !tt.HasText(typesettingProse) {
+		t.Fatalf("missing paragraph: %q", tt.Texts())
+	}
+	if err := tt.Click(g.text("typesettingJustify")); err != nil || !s.on {
+		t.Fatalf("justify: %v, %v", err, s.on)
+	}
+	font := ui.Font{Size: 14}
+	shape := ui.TextShape{Width: 280, Justify: true}
+	lines := ui.ShapeRichTextWith([]ui.Span{{Text: typesettingProse}}, font, shape).Lines()
+	if len(lines) < 3 {
+		t.Fatalf("%d lines", len(lines))
+	}
+	// Every line but the last fills the width.
+	for _, line := range lines[:len(lines)-1] {
+		if line.Rect.X+line.Rect.W < 279 {
+			t.Fatalf("line %+v short of the width", line)
+		}
+	}
+}
+
+func TestMarkdownLinksOpenAtHeadings(t *testing.T) {
+	_, s, _ := featureTester("Markdown", "Default", "en", 540)
+	s.markdown.OnLink("#table")
+	if s.markdown.Anchor != "#table" || s.markdown.AnchorVersion != 1 || s.index != 0 {
+		t.Fatalf("anchor %q version %d, actions %d", s.markdown.Anchor, s.markdown.AnchorVersion, s.index)
+	}
+	s.markdown.OnLink("example:action")
+	if s.index != 1 || s.markdown.AnchorVersion != 1 {
+		t.Fatalf("action link: actions %d, version %d", s.index, s.markdown.AnchorVersion)
 	}
 }

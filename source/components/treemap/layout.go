@@ -120,7 +120,7 @@ func (v *view) begin(c *ui.Context, nodes []Node, opts Options) {
 	if v.duration == 0 {
 		v.duration = 400 * time.Millisecond
 	}
-	if v.duration < 0 || c.Preferences().ReduceMotion {
+	if v.duration < 0 || c.Preferences().ReduceMotion || c.Instant() {
 		v.duration = 0
 	}
 	v.shape = func(s string, size float32, weight int) (float32, float32) {

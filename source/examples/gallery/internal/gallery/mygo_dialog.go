@@ -96,12 +96,14 @@ func exampleNativeDialogs(c *ui.Context, s *demoState) {
 			buttons := []string{m.Delete(), m.Cancel()}
 			d.showDialog(m, func() ([][2]string, error) {
 				res, err := mygo.Dialog.Message(mygo.MessageOptions{
-					Parent:        d.dialogParent(),
-					Type:          kind,
-					Message:       m.DialogAskMessage(),
-					Detail:        m.DialogAskDetail(),
-					Buttons:       buttons,
-					CheckboxLabel: m.DialogDontAsk(),
+					Parent:  d.dialogParent(),
+					Type:    kind,
+					Message: m.DialogAskMessage(),
+					Detail:  m.DialogAskDetail(),
+					Buttons: buttons,
+					// Delete erases data, so macOS and Linux set it apart.
+					DestructiveButtons: []int{0},
+					CheckboxLabel:      m.DialogDontAsk(),
 				})
 				if err != nil {
 					return nil, err

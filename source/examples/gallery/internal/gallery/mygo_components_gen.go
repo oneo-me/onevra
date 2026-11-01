@@ -2,7 +2,7 @@
 
 package gallery
 
-const mygoScanVersion = "v0.7.1"
+const mygoScanVersion = "v0.7.4"
 
 var mygoDiscovered = []mygoComponent{
 	{Name: "Accordion", Source: "ui/api_gen.go"},
@@ -24,6 +24,7 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Column", Source: "ui/api_gen.go"},
 	{Name: "Combobox", Source: "ui/api_gen.go"},
 	{Name: "DateInput", Source: "ui/api_gen.go"},
+	{Name: "DecimalInput", Source: "ui/api_gen.go"},
 	{Name: "Divider", Source: "ui/api_gen.go"},
 	{Name: "EditableText", Source: "ui/api_gen.go"},
 	{Name: "Field", Source: "ui/api_gen.go"},
@@ -46,6 +47,7 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "OutlineTable", Source: "ui/api_gen.go"},
 	{Name: "Overlay", Source: "ui/api_gen.go"},
 	{Name: "Popover", Source: "ui/api_gen.go"},
+	{Name: "PopoverMenuButton", Source: "ui/api_gen.go"},
 	{Name: "PrimaryButton", Source: "ui/api_gen.go"},
 	{Name: "Progress", Source: "ui/api_gen.go"},
 	{Name: "Radio", Source: "ui/api_gen.go"},
@@ -81,6 +83,7 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "TextInput", Source: "ui/api_gen.go"},
 	{Name: "TextInputBuffer", Source: "ui/api_gen.go"},
 	{Name: "Textf", Source: "ui/api_gen.go"},
+	{Name: "Themed", Source: "ui/api_gen.go"},
 	{Name: "TimeInput", Source: "ui/api_gen.go"},
 	{Name: "Toggle", Source: "ui/api_gen.go"},
 	{Name: "ToggleGroup", Source: "ui/api_gen.go"},
@@ -88,5 +91,6 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Toolbar", Source: "ui/api_gen.go"},
 	{Name: "Tree", Source: "ui/api_gen.go"},
 	{Name: "TreeItem", Source: "ui/api_gen.go"},
+	{Name: "Video", Source: "ui/api_gen.go"},
 	{Name: "WebView", Source: "ui/api_gen.go"},
 }

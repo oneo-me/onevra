@@ -367,5 +367,6 @@ func (g *Gallery) Close() {
 		s.audio.close()
 		s.system.close()
 		s.flyout.close()
+		s.video.close()
 	}
 }

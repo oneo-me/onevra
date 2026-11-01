@@ -35,7 +35,7 @@ func animateValues(c *ui.Context, e ui.Element, kind kind, columns int, keys []s
 			}
 		}
 	}
-	if !compatible || duration < 0 || c.Preferences().ReduceMotion {
+	if !compatible || duration < 0 || c.Preferences().ReduceMotion || c.Instant() {
 		st.kind, st.columns, st.keys = kind, columns, slices.Clone(keys)
 		st.from, st.target = slices.Clone(target), slices.Clone(target)
 		e.Jump(dataProgress, 1)

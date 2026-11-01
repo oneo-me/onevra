@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"slices"
 	"strings"
 	"time"
 
@@ -19,6 +20,7 @@ type demoState struct {
 	glass           glassDemo
 	terminal        terminalDemo
 	webView         webViewDemo
+	video           videoDemo
 	audio           audioDemo
 	system          systemDemo
 	canvas          canvasDemo
@@ -364,6 +366,36 @@ func exampleHidden(c *ui.Context, s *demoState) {
 				Hidden(i == 1 && s.on).Children(func() { components.Text(c, tr(c, key)) })
 		}
 	})
+}
+
+// exampleIgnoreInput shows each row's delete button only under the pointer;
+// hidden, it ignores the pointer and the keyboard, while screen readers can
+// still press it.
+func exampleIgnoreInput(c *ui.Context, s *demoState) {
+	t := c.Theme()
+	ui.Column(c).Width(t.Space(80)).Gap(t.Space(1)).Children(func() {
+		for i, key := range []string{"first", "second", "third"} {
+			if slices.Contains(s.tags, key) {
+				continue
+			}
+			row := ui.Row(c).Key(key).FillWidth().Height(t.Space(10)).Padding(0, t.Space(3)).Radius(t.Radius).
+				Background(t.Surface).AlignItems(ui.Center)
+			hovered := row.Hovered()
+			row.Children(func() {
+				components.Text(c, tr(c, key)).Grow(1)
+				del := components.Button(c, tr(c, "delete"), components.ButtonGhost).Key(i).IgnoreInput(!hovered)
+				if !hovered {
+					del.Opacity(0)
+				}
+				if del.Clicked() {
+					s.tags = append(s.tags, key)
+				}
+			})
+		}
+	})
+	if len(s.tags) > 0 && components.Button(c, tr(c, "ignoreInputRestore"), components.ButtonOutline).Clicked() {
+		s.tags = s.tags[:0]
+	}
 }
 
 func exampleRow(c *ui.Context, s *demoState) {

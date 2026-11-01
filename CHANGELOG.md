@@ -4,6 +4,9 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: Require MyGo 0.7.4.
+- Settle `components.Honeycomb`, `chart`, `flow`, `graph` and `treemap` transitions at once in frames where `ui.Context.DisableAnimations` applies.
+
 ## [0.2026.16] - 2026-10-27
 
 - Breaking: Require MyGo 0.7.1.

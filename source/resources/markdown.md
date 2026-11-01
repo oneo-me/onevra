@@ -21,6 +21,7 @@ A backslash creates a hard break here.\
 This starts a new line in the same paragraph.
 
 [Named action][action] and <https://example.com> exercise link activation.
+[Jump to the table](#table) scrolls to its heading.
 
 Inline math such as \(a^2 + b^2 = c^2\) and \(2\pi \cdot r\) is drawn by the application.
 
