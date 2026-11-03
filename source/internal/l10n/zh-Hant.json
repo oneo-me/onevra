@@ -41,6 +41,8 @@
   "closeToast": "關閉",
   "toggleSidebar": "展開或收起側邊欄",
   "resizeSidebar": "調整側邊欄寬度",
+  "toggleRightSidebar": "展開或收起右側欄",
+  "resizeRightSidebar": "調整右側欄寬度",
   "minimizeWindow": "最小化視窗",
   "maximizeWindow": "最大化視窗",
   "restoreWindow": "還原視窗",

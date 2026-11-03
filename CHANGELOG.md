@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `sidebar.ShellOptions.Right` and `RightHeader` for a resizable, collapsible right sidebar outside the floating header
+
 ## [0.2026.17] - 2026-11-02
 
 - Breaking: Require MyGo 0.7.4.

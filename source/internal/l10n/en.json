@@ -41,6 +41,8 @@
   "closeToast": "Close",
   "toggleSidebar": "Toggle sidebar",
   "resizeSidebar": "Resize sidebar",
+  "toggleRightSidebar": "Toggle right sidebar",
+  "resizeRightSidebar": "Resize right sidebar",
   "minimizeWindow": "Minimize window",
   "maximizeWindow": "Maximize window",
   "restoreWindow": "Restore window",

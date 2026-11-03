@@ -57,6 +57,24 @@ type ShellOptions struct {
 	LeftMinWidth, LeftMaxWidth int
 	// The left sidebar starts open.
 	LeftCollapsed bool
+	// Right, when set, adds a full-height sidebar at the window's trailing
+	// edge, outside the floating header, which then spans only Left and
+	// Content and ends with the right sidebar's toggle while it is closed. Like Left, it shows
+	// the window's material and owns its top inset: use HeaderHeight(c) to
+	// keep controls below RightHeader.
+	Right func(*ui.Context)
+	// RightHeader builds the right sidebar's own draggable header, clipped to
+	// its width, before the sidebar's toggle, which ends that header while
+	// the sidebar is open. It is omitted while the right sidebar is
+	// collapsed, animating, or a replacement page shows. On Windows the
+	// caption buttons follow the toggle.
+	RightHeader func(*ui.Context)
+	// RightWidth, RightMinWidth and RightMaxWidth are LeftWidth's and its
+	// limits for the right sidebar; non-positive values use 320 and 200.
+	RightWidth                   int
+	RightMinWidth, RightMaxWidth int
+	// RightCollapsed starts the right sidebar closed.
+	RightCollapsed bool
 	// Toasts places the window's toasts; top placements also clear the header.
 	Toasts components.ToastOptions
 	// Theme, when set, returns the frame's theme; Shell installs it before
@@ -77,6 +95,10 @@ type Shell struct {
 	page      func(*ui.Context)
 	leftOpen  bool
 	leftWidth float32
+	// rightOpen and rightWidth are the right sidebar's, as leftOpen and
+	// leftWidth.
+	rightOpen  bool
+	rightWidth float32
 }
 
 type shellWindow interface {
@@ -131,7 +153,21 @@ func newShell(options ShellOptions) *Shell {
 		options.LeftMaxWidth = max(options.LeftMaxWidth, options.LeftMinWidth)
 		options.LeftWidth = min(options.LeftWidth, options.LeftMaxWidth)
 	}
-	return &Shell{options: options, leftOpen: !options.LeftCollapsed, leftWidth: float32(options.LeftWidth)}
+	if options.RightWidth <= 0 {
+		options.RightWidth = 320
+	}
+	if options.RightMinWidth <= 0 {
+		options.RightMinWidth = 200
+	}
+	options.RightWidth = max(options.RightWidth, options.RightMinWidth)
+	if options.RightMaxWidth > 0 {
+		options.RightMaxWidth = max(options.RightMaxWidth, options.RightMinWidth)
+		options.RightWidth = min(options.RightWidth, options.RightMaxWidth)
+	}
+	return &Shell{
+		options: options, leftOpen: !options.LeftCollapsed, leftWidth: float32(options.LeftWidth),
+		rightOpen: !options.RightCollapsed, rightWidth: float32(options.RightWidth),
+	}
 }
 
 func (s *Shell) nativeOptions() mygo.WindowOptions {
@@ -196,6 +232,32 @@ func (s *Shell) LeftExpanded() bool { return s.leftOpen }
 // SetLeftExpanded animates the interior layout without resizing the window.
 func (s *Shell) SetLeftExpanded(open bool) {
 	s.leftOpen = open
+	s.refresh()
+}
+
+// RightWidth reports the chosen right sidebar width in DIPs, as LeftWidth.
+func (s *Shell) RightWidth() float32 { return s.rightWidth }
+
+// SetRightWidth restores or changes the chosen right sidebar width, as
+// SetLeftWidth.
+func (s *Shell) SetRightWidth(width float32) {
+	if math.IsNaN(float64(width)) || math.IsInf(float64(width), 0) {
+		return
+	}
+	s.rightWidth = max(float32(s.options.RightMinWidth), width)
+	if s.options.RightMaxWidth > 0 {
+		s.rightWidth = min(s.rightWidth, float32(s.options.RightMaxWidth))
+	}
+	s.refresh()
+}
+
+// RightExpanded reports the right sidebar's requested state, including
+// during an animation. It is false without ShellOptions.Right.
+func (s *Shell) RightExpanded() bool { return s.rightOpen && s.options.Right != nil }
+
+// SetRightExpanded animates the right sidebar without resizing the window.
+func (s *Shell) SetRightExpanded(open bool) {
+	s.rightOpen = open
 	s.refresh()
 }
 
@@ -271,6 +333,24 @@ func (s *Shell) build(c *ui.Context) {
 		maxLeftWidth = min(maxLeftWidth, float32(s.options.LeftMaxWidth))
 	}
 	leftWidth := min(s.leftWidth, maxLeftWidth)
+	hasRight := s.options.Right != nil
+	rightTarget := openFraction(s.rightOpen && hasRight)
+	rightProgress := root.Animate("right", rightTarget, sidebarDuration)
+	if c.Preferences().ReduceMotion {
+		rightProgress = rightTarget
+	}
+	// The right sidebar yields to the left one, keeping its resize handle
+	// inside the room the left sidebar leaves.
+	maxRightWidth := max(float32(0), width-leftWidth*leftProgress-3)
+	if s.options.RightMaxWidth > 0 {
+		maxRightWidth = min(maxRightWidth, float32(s.options.RightMaxWidth))
+	}
+	rightWidth := min(s.rightWidth, maxRightWidth)
+	rightShown := rightWidth * rightProgress
+	if page != nil {
+		rightShown = 0
+	}
+	rightReady := page == nil && s.rightOpen && hasRight && rightProgress == 1
 	root.Children(func() {
 		ui.Column(c).Key(page != nil).Fill().Clip().Children(func() {
 			if page != nil {
@@ -309,7 +389,21 @@ func (s *Shell) build(c *ui.Context) {
 					if leftProgress > 0 {
 						shellSeparator(c)
 					}
+					if rightProgress > 0 {
+						ui.Box(c).Key("right-separator").Absolute().Right(0).Top(0).Bottom(0).Width(1).Background(c.Theme().Border)
+					}
 				})
+				if rightProgress > 0 {
+					// As the left sidebar, only the visible slice changes width.
+					right := ui.Column(c).Key("right").Width(rightWidth * rightProgress).Shrink(0).FillHeight().Clip()
+					if !vibrant {
+						right.Background(c.Theme().Surface.Alpha(1))
+					}
+					right.Children(func() {
+						ui.Column(c).Width(rightWidth).Shrink(0).FillHeight().
+							Disabled(!s.rightOpen).Children(func() { s.options.Right(c) })
+					})
+				}
 			})
 		})
 		// An unpainted header overlays the full-height columns. Only its controls
@@ -318,9 +412,27 @@ func (s *Shell) build(c *ui.Context) {
 		if runtime.GOOS == "darwin" && bar.Left > 0 {
 			leftInset += 16
 		}
+		// On Windows the caption buttons keep the window's top-right corner in
+		// their own layer; the header ending there reserves their room.
 		rightInset := max(8, bar.Right)
-		ui.Row(c).Key("header").Absolute().Top(0).Left(0).Right(0).Height(headerHeight).
-			AlignItems(ui.Center).Padding(6, rightInset, 6, leftInset).
+		captions := runtime.GOOS == "windows"
+		if captions {
+			rightInset += captionWidth(c)
+		}
+		mainInset := rightInset
+		if rightShown > 0 {
+			mainInset = max(8, rightInset-rightShown)
+		}
+		// The right sidebar's toggle ends its header while it is open, and the
+		// main header otherwise.
+		toggleInRight := page == nil && hasRight && s.rightOpen
+		toggleRight := func() {
+			if IconButton(c, lucide.PanelRight(), l10n.In(c.Locale()).Text("toggleRightSidebar")).Clicked() {
+				s.SetRightExpanded(!s.rightOpen)
+			}
+		}
+		ui.Row(c).Key("header").Absolute().Top(0).Left(0).Right(rightShown).Height(headerHeight).
+			AlignItems(ui.Center).Padding(6, mainInset, 6, leftInset).
 			DragWindow().Children(func() {
 			if page == nil {
 				if IconButton(c, lucide.PanelLeft(), l10n.In(c.Locale()).Text("toggleSidebar")).Clicked() {
@@ -342,17 +454,40 @@ func (s *Shell) build(c *ui.Context) {
 						s.options.ContentTitle(c)
 					}
 				})
-			}
-			if runtime.GOOS == "windows" {
-				if page != nil {
-					ui.Spacer(c)
+				if hasRight && !toggleInRight {
+					toggleRight()
 				}
-				s.captionButtons(c)
 			}
 		})
-		// The full-height handle wins hit testing over the draggable header.
+		if rightShown > 0 {
+			// The header keeps the sidebar's full width at the window's edge
+			// while the sidebar slides, so its toggle stays in place.
+			ui.Box(c).Key("right-header").Absolute().Top(0).Right(0).Width(rightShown).Height(headerHeight).
+				Clip().DragWindow().Children(func() {
+				ui.Row(c).Absolute().Top(0).Right(0).Width(rightWidth).Height(headerHeight).
+					AlignItems(ui.Center).Gap(4).Padding(6, rightInset, 6, 8).Children(func() {
+					if rightReady && s.options.RightHeader != nil {
+						ui.Row(c).Key("right-header-content").Grow(1).MinWidth(0).FillHeight().AlignItems(ui.Center).Clip().
+							Children(func() { s.options.RightHeader(c) })
+					} else {
+						ui.Spacer(c)
+					}
+					if toggleInRight {
+						toggleRight()
+					}
+				})
+			})
+		}
+		if captions {
+			ui.Row(c).Key("window-controls-layer").Absolute().Top(0).Right(0).Height(headerHeight).
+				AlignItems(ui.Center).Padding(6, max(8, bar.Right), 6, 0).Children(func() { s.captionButtons(c) })
+		}
+		// The full-height handles win hit testing over the draggable headers.
 		if page == nil && s.leftOpen && leftProgress == 1 {
 			s.resizeHandle(c, leftWidth, maxLeftWidth)
+		}
+		if rightReady {
+			s.rightResizeHandle(c, width, rightWidth, maxRightWidth)
 		}
 	})
 }
@@ -378,6 +513,37 @@ func (s *Shell) resizeHandle(c *ui.Context, width, maxWidth float32) {
 		c.Invalidate()
 	} else if next != width {
 		s.leftWidth = max(float32(s.options.LeftMinWidth), min(next, maxWidth))
+		c.Invalidate()
+	}
+	handle.FocusRing(handle.FocusVisible())
+}
+
+// captionWidth is the width of the caption buttons' row.
+func captionWidth(c *ui.Context) float32 {
+	return 3*max(32, c.Theme().Rem(2)) + 2*4
+}
+
+// rightResizeHandle is resizeHandle for the right sidebar, at the window's
+// width less the sidebar's.
+func (s *Shell) rightResizeHandle(c *ui.Context, windowWidth, width, maxWidth float32) {
+	handle := ui.Box(c).Key("right-resize").Absolute().Left(windowWidth - width - 3).Top(0).Bottom(0).Width(6).
+		Cursor(ui.CursorResizeEW).Focusable().Role(ui.RoleSplitter).Label(l10n.In(c.Locale()).Text("resizeRightSidebar"))
+	next := width
+	if dx, _, held := handle.Dragged(); held {
+		handle.Focus()
+		next -= dx
+	}
+	if handle.Shortcut(0, ui.KeyLeft) {
+		next += 10
+	}
+	if handle.Shortcut(0, ui.KeyRight) {
+		next -= 10
+	}
+	if handle.DoubleClicked() {
+		s.rightWidth = float32(s.options.RightWidth)
+		c.Invalidate()
+	} else if next != width {
+		s.rightWidth = max(float32(s.options.RightMinWidth), min(next, maxWidth))
 		c.Invalidate()
 	}
 	handle.FocusRing(handle.FocusVisible())

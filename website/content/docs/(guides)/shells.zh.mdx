@@ -54,6 +54,8 @@ shell := sidebar.NewShell(sidebar.ShellOptions{
 
 `Left` 和 `Content` 在浮动标题栏后方构建全高区域，因此它们的背景可以延伸到窗口顶部。用 `sidebar.HeaderHeight(c)` 作为顶部内边距，让控件避开标题栏。侧边栏默认宽 220 点；用户可以拖动边缘调整宽度，双击边缘恢复默认值。导航请用 [Sidebar](/zh/docs/components/sidebar) 组件构建。
 
+`Right` 在窗口末端添加第二个全高侧边栏，例如检查器，和 `Left` 一样透出窗口材质。浮动标题栏随之止于它之前，`RightHeader` 构建该侧边栏自己的标题栏。它的展开收起按钮位于贴着窗口右边缘的那个标题栏末尾，Windows 上让出窗口按钮的位置。它默认展开，设置 `RightCollapsed` 则默认收起；用 `SetRightExpanded` 和 `SetRightWidth` 恢复保存的状态。
+
 `StateKey` 让 MyGo 以该键记住窗口的大小和位置。侧边栏宽度和当前页面仍属于应用状态。
 
 ## 生命周期

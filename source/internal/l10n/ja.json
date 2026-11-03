@@ -41,6 +41,8 @@
   "closeToast": "閉じる",
   "toggleSidebar": "サイドバーの表示を切り替え",
   "resizeSidebar": "サイドバーの幅を調整",
+  "toggleRightSidebar": "右サイドバーの表示を切り替え",
+  "resizeRightSidebar": "右サイドバーの幅を調整",
   "minimizeWindow": "ウインドウを最小化",
   "maximizeWindow": "ウインドウを最大化",
   "restoreWindow": "ウインドウを元のサイズに戻す",

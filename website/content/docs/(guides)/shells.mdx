@@ -54,6 +54,8 @@ shell := sidebar.NewShell(sidebar.ShellOptions{
 
 `Left` and `Content` build full-height regions behind the floating header, so their backgrounds reach the top of the window. Keep their controls clear of the header with `sidebar.HeaderHeight(c)` as top padding. The sidebar defaults to 220 points wide; users resize it by dragging its edge, and double-clicking the edge restores the default. Build the navigation with the [Sidebar](/docs/components/sidebar) component.
 
+`Right` adds a second full-height sidebar at the window's trailing edge, such as an inspector, with the window's material like `Left`. The floating header then ends before it, and `RightHeader` builds the sidebar's own header. The sidebar's toggle ends whichever header is at the window's edge, after the caption buttons' reserved room on Windows. It starts open unless `RightCollapsed` is set; `SetRightExpanded` and `SetRightWidth` restore a saved state.
+
 `StateKey` asks MyGo to remember the window's size and position under that key. Sidebar width and the selected page remain application state.
 
 ## Lifecycle

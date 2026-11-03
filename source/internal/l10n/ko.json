@@ -41,6 +41,8 @@
   "closeToast": "닫기",
   "toggleSidebar": "사이드바 표시/숨기기",
   "resizeSidebar": "사이드바 너비 조절",
+  "toggleRightSidebar": "오른쪽 사이드바 표시/숨기기",
+  "resizeRightSidebar": "오른쪽 사이드바 너비 조정",
   "minimizeWindow": "창 최소화",
   "maximizeWindow": "창 최대화",
   "restoreWindow": "창 복원",
