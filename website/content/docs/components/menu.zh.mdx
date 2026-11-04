@@ -1,0 +1,19 @@
+---
+title: Menu
+description: 在弹出面板中显示的操作菜单，可从按钮或右键打开。
+---
+
+<Example name="menu" height={320} />
+
+`components.MenuButton` 在按钮下方打开菜单，`components.ContextMenu` 在右键点击元素的位置打开菜单，按菜单键时在元素下方打开。先构建元素，然后每帧用它调用其中一个；通过每个菜单项的 `Chosen()` 判断它是否被选中，选中也会关闭菜单。
+
+`Group` 把菜单项放在一个标题下，标题本身就能区分各组，无需分隔线。菜单与其他弹出面板外观一致，并支持菜单的按键：上下键跳过禁用项移动，Enter 选择，Escape 关闭。
+
+系统自己的菜单（例如菜单栏）请使用 MyGo 的 `Menu` 和 `ContextMenu`，见[按钮](/zh/docs/components/button)页面。
+
+## API
+
+<GoAPI name="components.ContextMenu" />
+<GoAPI name="components.MenuButton" />
+<GoAPI name="components.Menu" />
+<GoAPI name="components.MenuItem" />

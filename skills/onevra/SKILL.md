@@ -60,7 +60,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 
 | Need | Use |
 | --- | --- |
-| Button, icon button, link, primary button, menu button | `components.Button` with a variant; `components.IconButton` for icon-only actions with a tooltip, plain, compact or raised; `ButtonToolbar` matches `TabsSegmented`'s chosen segment; `.Menu(...)` for menus; `components.HoldToConfirm` for destructive actions confirmed by holding |
+| Button, icon button, link, primary button, menu button | `components.Button` with a variant; `components.IconButton` for icon-only actions with a tooltip, plain, compact or raised; `ButtonToolbar` matches `TabsSegmented`'s chosen segment; `components.MenuButton` and `components.ContextMenu` for menus in the window's look, with `Group` headings, or `.Menu(...)` and `.ContextMenu(...)` for the system's; `components.HoldToConfirm` for destructive actions confirmed by holding |
 | Action toolbar, floating editor or selection toolbar, tools rail | `components.FloatingButtonGroup`, muted or raised, in a row or column |
 | Title bar, toolbar or bottom bar floating over scrolling content | `components.ScrollEdgeBar` with a glass bar, soft or hard scroll edge, or progressive blur; pad the content by `ScrollEdgeBarExtent`; `ScrollEdge` for the effect alone |
 | Text, editable text, rich inline text | `components.Text`, `components.RichText` |
@@ -93,7 +93,7 @@ Use MyGo directly for:
 
 - Layout primitives: `ui.Box`, `Column`, `Row`, `Spacer`, `Grid`, `Overlay`, and `ui.Textf` for formatted display text.
 - Specialized charts and continuous/time axes from `ui/chart`, and element transforms, motion methods and timelines. Use `LayoutBounds` for layout calculations and local pointer coordinates; `Element.Bounds` includes visual transforms.
-- Native menus and context menus, `Flyout`, `WebView`, `ui/editor` code, snippet and diff views, the `ui/richtext` editor, `ui/markdown` documents and streaming replies, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
+- Native menus, such as the menu bar's, tray and Dock menus, `Flyout`, `WebView`, `ui/editor` code, snippet and diff views, the `ui/richtext` editor, `ui/markdown` documents and streaming replies, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
 - MyGo's unstyled bases when building a new reusable control.
 - A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Meter, Form, Field, Toolbar and OutlineTable: compose dividers from Box or borders before reaching for the upstream widget. For a segmented control, use `components.Tabs` with `TabsSegmented` instead of `ui.Segmented`.
 

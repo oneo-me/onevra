@@ -1,0 +1,19 @@
+---
+title: Menu
+description: A menu of actions in a popover, opened from a button or by right-clicking.
+---
+
+<Example name="menu" height={320} />
+
+`components.MenuButton` opens a menu below a button, and `components.ContextMenu` opens one where an element is right-clicked, or below it for the menu key. Build the element first, then call either with it every frame; ask each item whether it was `Chosen()`, which also closes the menu.
+
+`Group` puts items under a heading, which sets them apart without a separator. The menu has the look of the other popovers, and the keys of a menu: Up and Down move past disabled items, Enter chooses and Escape closes.
+
+For menus of the system's own, as in the menu bar, use MyGo's `Menu` and `ContextMenu`, shown on the [button](/docs/components/button) page.
+
+## API
+
+<GoAPI name="components.ContextMenu" />
+<GoAPI name="components.MenuButton" />
+<GoAPI name="components.Menu" />
+<GoAPI name="components.MenuItem" />
