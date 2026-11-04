@@ -3,6 +3,7 @@ package components
 import (
 	"math"
 	"slices"
+	"strconv"
 	"time"
 
 	"github.com/egoist/mygo/plugins/glass"
@@ -23,6 +24,12 @@ type HoneycombItem struct {
 	// A clipped cell would take a mask the GPU makes anew every frame as the
 	// honeycomb turns it, which costs the frame.
 	Content func(c *ui.Context, size float32)
+	// Images, when it holds more than one image, draws them in the cell
+	// instead of Content or Image, overlapping as a group: the first is the
+	// largest and lies in front, each is edged in the theme's background and
+	// wears the ring, and a badge counts those beyond the first three when
+	// there are more than four. A single image fills the cell alone.
+	Images []HoneycombImage
 	// Overlay, when set, builds content over the item and its ring at the
 	// given size, such as a badge on its edge. Like Content it is not clipped.
 	Overlay func(c *ui.Context, size float32)
@@ -37,6 +44,16 @@ type HoneycombItem struct {
 	// item is right-clicked, without choosing it, and, while it has the
 	// focus, from the menu key or Shift+F10.
 	Menu func(m *ui.Menu)
+}
+
+// HoneycombImage is one round image of a HoneycombItem's Images.
+type HoneycombImage struct {
+	// Image draws a decoded bitmap or SVG filling the image's circle,
+	// replaced by Content when that is set.
+	Image ui.ImageSource
+	// Content, when set, builds the image at the given size instead of
+	// drawing Image. Like HoneycombItem.Content it fills its circle itself.
+	Content func(c *ui.Context, size float32)
 }
 
 // HoneycombOptions configures a Honeycomb.
@@ -356,8 +373,8 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 				}
 				// The ring is a layer of its own between the item and its
 				// overlay, so an overlay can sit on top of it.
-				drawRing := func() {
-					ui.Box(c).Absolute().Left(0).Top(0).Size(size, size).Draw(func(p *ui.Painter, r ui.Rect) {
+				drawRing := func(x, y, size float32) {
+					ui.Box(c).Absolute().Left(x).Top(y).Size(size, size).Draw(func(p *ui.Painter, r ui.Rect) {
 						if col := color.Alpha(ring * honeycombRingOpacity); col.A > 0 {
 							p.Stroke(r, col, r.W/2, m.ring)
 						}
@@ -376,14 +393,21 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 				if opacity > .15 {
 					p.hits = append(p.hits, honeycombHit{item.ID, ui.Rect{X: cx - size/2, Y: cy - size/2, W: size, H: size}})
 				}
-				content, image, overlay := item.Content, item.Image, item.Overlay
+				content, image, images, overlay := item.Content, item.Image, item.Images, item.Overlay
+				if len(images) == 1 {
+					content, image, images = images[0].Content, images[0].Image, nil
+				}
 				b.Children(func() {
-					if content != nil {
+					switch {
+					case len(images) > 1:
+						honeycombGroup(c, images, size, drawRing)
+					case content != nil:
 						content(c, size)
-					} else {
+						drawRing(0, 0, size)
+					default:
 						Image(c, image).Absolute().Left(0).Top(0).Size(size, size).Fit(ui.Cover).Radius(size / 2)
+						drawRing(0, 0, size)
 					}
-					drawRing()
 					if overlay != nil {
 						overlay(c, size)
 					}
@@ -423,6 +447,59 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 		})
 	})
 	return chosen
+}
+
+// honeycombSpot is a circle of a cell's group of images: its center and
+// radius in fractions of the cell's radius, from its middle.
+type honeycombSpot struct{ x, y, r float32 }
+
+// honeycombGroups lay out a group of images by how many a cell shows, from
+// back to front: the last, the group's first image, is the largest. A fourth
+// spot, smaller and over the front one's right edge, holds a fourth image or
+// the badge counting the rest. They stay clear of the cell's edge.
+var honeycombGroups = [][]honeycombSpot{
+	2: {{-.3, -.26, .46}, {.24, .26, .54}},
+	3: {{-.36, -.3, .4}, {.34, -.34, .38}, {-.02, .3, .5}},
+	4: {{-.36, -.3, .4}, {.34, -.34, .38}, {-.02, .3, .5}, {.52, .3, .24}},
+}
+
+// honeycombGroup draws a cell's images overlapping in a cell of size, each
+// edged in the theme's background and ringed by ring, so the edges part the
+// images and the ring follows every one.
+func honeycombGroup(c *ui.Context, images []HoneycombImage, size float32, ring func(x, y, size float32)) {
+	n := len(images)
+	spots := honeycombGroups[min(n, len(honeycombGroups)-1)]
+	// The first image lies in front, so the others fill the spots behind it
+	// in their order.
+	order := append(slices.Clone(images[1:min(n, 3)]), images[0])
+	if n == 4 {
+		order = append(order, images[3])
+	}
+	th := c.Theme()
+	edge := max(1, size*.03)
+	for i, spot := range spots {
+		d := size * spot.r
+		x, y := size/2*(1+spot.x)-d/2, size/2*(1+spot.y)-d/2
+		inner := d - 2*edge
+		ui.Box(c).Absolute().Left(x).Top(y).Size(d, d).Radius(d / 2).Background(th.Background).
+			Padding(edge).Center().Children(func() {
+			switch {
+			case i == len(order):
+				// The badge's text takes whole sizes: the honeycomb resizes
+				// cells every frame of a pan, and each fractional size would
+				// load another font.
+				ui.Box(c).Size(inner, inner).Radius(inner / 2).Background(th.Accent).Center().Children(func() {
+					Text(c, "+"+strconv.Itoa(n-3)).SingleLine().FontSize(float32(math.Round(float64(inner * .5)))).
+						FontWeight(600).TextColor(th.AccentText).Unselectable()
+				})
+			case order[i].Content != nil:
+				order[i].Content(c, inner)
+			default:
+				Image(c, order[i].Image).Size(inner, inner).Fit(ui.Cover).Radius(inner / 2)
+			}
+		})
+		ring(x, y, d)
+	}
 }
 
 // honeycombPoint is a point of the honeycomb, from its first cell.

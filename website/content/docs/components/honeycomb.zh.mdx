@@ -7,10 +7,11 @@ description: 像手表表盘那样放大显示的蜂窝状项目，可拖动平�
 
 拖动或滚动即可平移；松手后，离中心最近的项目会居中并被选中。中心的项目放大得最多，越往边缘越偏转，仿佛贴在球面上。键盘可以到达每一个项目。
 
-项目按给定尺寸绘制自己的内容。`Caption` 在玻璃标签上显示中间项目的名称，`Curvature`、`Gap` 和 `OffsetY` 用于调整布局。
+项目按给定尺寸绘制自己的内容，或用 `Images` 把多张图片重叠成一组，超出三张的部分以角标计数。`Caption` 在玻璃标签上显示中间项目的名称，`Curvature`、`Gap` 和 `OffsetY` 用于调整布局。
 
 ## API
 
 <GoAPI name="components.Honeycomb" />
 <GoAPI name="components.HoneycombOptions" />
 <GoAPI name="components.HoneycombItem" />
+<GoAPI name="components.HoneycombImage" />

@@ -809,3 +809,69 @@ func TestHoneycombCaptionsTheMiddleItem(t *testing.T) {
 		t.Fatalf("a click on the caption over %s chose %q", under, selected)
 	}
 }
+
+func TestHoneycombGroupsImages(t *testing.T) {
+	var sizes []float32
+	image := func(i int) HoneycombImage {
+		return HoneycombImage{Content: func(c *ui.Context, size float32) {
+			sizes = append(sizes, size)
+			ui.Box(c).Size(size, size).Radius(size / 2).Background(ui.RGB(255, 255, 255)).Label(fmt.Sprint("image", i))
+		}}
+	}
+	var images []HoneycombImage
+	for i := range 6 {
+		images = append(images, image(i))
+	}
+	build := func(images []HoneycombImage) *ui.Tester {
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(false))
+			sizes = sizes[:0]
+			Honeycomb(c, HoneycombOptions{Items: []HoneycombItem{{ID: "a", Label: "A", Images: images, Ring: ui.RGB(0, 200, 0)},
+				{ID: "b", Label: "B"}}, Selected: "a", SelectedLabel: "Item"})
+		}, 600, 300)
+		settleHoneycomb(tt)
+		return tt
+	}
+	m := honeycombTestMetrics()
+
+	// One image fills the cell alone.
+	build(images[:1])
+	if len(sizes) != 1 || math.Abs(float64(sizes[0]-m.large)) > .01 {
+		t.Fatalf("a single image not built at the cell's size: %v", sizes)
+	}
+
+	// More than four show the first three, the first largest and in front,
+	// and a badge counting the rest; each wears the ring.
+	tt := build(images)
+	if len(sizes) != 3 || sizes[2] <= sizes[0] || sizes[2] <= sizes[1] || sizes[2] >= m.large/2 {
+		t.Fatalf("group sizes: %v", sizes)
+	}
+	if !tt.HasText("+3") || tt.HasText("image3") {
+		t.Fatalf("group: %v", tt.Texts())
+	}
+	img := tt.Image()
+	for i := range 3 {
+		r, ok := tt.Find(fmt.Sprint("image", i))
+		if !ok {
+			t.Fatalf("image %d missing", i)
+		}
+		// The ring tints the image's edge just inside the background's.
+		n := 0
+		for y := int(r.Y) - 3; y < int(r.Y+r.H)+3; y++ {
+			for x := int(r.X) - 3; x < int(r.X+r.W)+3; x++ {
+				if p := img.RGBAAt(x, y); p.G > 40 && int(p.G) > int(p.R)+25 && int(p.G) > int(p.B)+25 {
+					n++
+				}
+			}
+		}
+		if n < 20 {
+			t.Fatalf("image %d wears %d ring pixels", i, n)
+		}
+	}
+
+	// Four show every image without a badge.
+	tt = build(images[:4])
+	if len(sizes) != 4 || tt.HasText("+1") {
+		t.Fatalf("four images: %v %v", sizes, tt.Texts())
+	}
+}

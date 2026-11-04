@@ -38,15 +38,15 @@ func (l *launcher) View(c *ui.Context) {
 	for i, a := range launcherApps {
 		items[i] = components.HoneycombItem{
 			ID: a.id, Label: a.name, Caption: a.name, Ring: a.color,
-			// Content fills the cell's circle, which the honeycomb does not clip.
-			Content: func(c *ui.Context, size float32) {
-				ui.Box(c).Fill().Radius(size/2).Background(a.color.Alpha(.16)).
-					Border(1, a.color.Alpha(.45)).Center().Children(func() {
-					components.Icon(c, a.icon).Size(size*.42, size*.42).TextColor(a.color)
-				})
-			},
+			Content: func(c *ui.Context, size float32) { launcherIcon(c, a, size) },
 		}
 	}
+	// A folder shows the apps it holds as a group of images.
+	var folder []components.HoneycombImage
+	for _, a := range launcherApps[1:4] {
+		folder = append(folder, components.HoneycombImage{Content: func(c *ui.Context, size float32) { launcherIcon(c, a, size) }})
+	}
+	items = append(items, components.HoneycombItem{ID: "media", Label: "Media", Caption: "Media", Images: folder})
 	ui.Column(c).Fill().Children(func() {
 		if id := components.Honeycomb(c, components.HoneycombOptions{
 			Items:    items,
@@ -54,5 +54,13 @@ func (l *launcher) View(c *ui.Context) {
 		}); id != "" {
 			l.selected = id
 		}
+	})
+}
+
+// launcherIcon fills a cell's circle, which the honeycomb does not clip.
+func launcherIcon(c *ui.Context, a launcherApp, size float32) {
+	ui.Box(c).Size(size, size).Radius(size/2).Background(a.color.Alpha(.16)).
+		Border(1, a.color.Alpha(.45)).Center().Children(func() {
+		components.Icon(c, a.icon).Size(size*.42, size*.42).TextColor(a.color)
 	})
 }
