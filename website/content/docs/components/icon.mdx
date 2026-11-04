@@ -7,6 +7,13 @@ description: A Lucide icon or any SVG, sized and tinted like text.
 
 `components.Icon` takes a Lucide accessor, such as `lucide.Rocket`, or a parsed `*ui.SVG`. Icons inherit the text color and keep their strokes as they scale. See [icons](/docs/icons) for the Lucide package.
 
+## File icons
+
+<Example name="file-icon" height={160} />
+
+`components.FileIcon` shows a file's type, as code editors' file trees do. It picks a Lucide icon by the whole name, such as `go.mod`, or else by the extension, tinted in that ecosystem's color.
+
 ## API
 
 <GoAPI name="components.Icon" />
+<GoAPI name="components.FileIcon" />

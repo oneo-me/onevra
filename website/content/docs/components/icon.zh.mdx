@@ -7,6 +7,13 @@ description: Lucide 图标或任意 SVG，像文字一样设置尺寸和颜色�
 
 `components.Icon` 接受 Lucide 访问器（例如 `lucide.Rocket`）或已解析的 `*ui.SVG`。图标继承文字颜色，缩放时保持描边不变。Lucide 包的介绍请见[图标](/zh/docs/icons)。
 
+## 文件图标
+
+<Example name="file-icon" height={160} />
+
+`components.FileIcon` 像代码编辑器的文件树一样展示文件类型：先按完整文件名（例如 `go.mod`）选择 Lucide 图标，否则按扩展名选择，并染上对应生态的颜色。
+
 ## API
 
 <GoAPI name="components.Icon" />
+<GoAPI name="components.FileIcon" />
