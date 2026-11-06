@@ -24,7 +24,7 @@ Virtualized collections reuse non-selecting MyGo list and grid containers for sc
 
 Double-click column fitting and pinned section headers are not provided. Public role, selection, level and active-descendant metadata describe the rows, but this composition does not claim full parity with MyGo's private collection accessibility actions; native assistive-technology review is still required.
 
-For basic usage, see the [README](../../README.md#getting-started); public contracts and defaults belong to the [API source](../../source/shells/sidebar/shell.go).
+For basic usage, see the [README](../../README.md#usage); public contracts and defaults belong to the [API source](../../source/shells/sidebar/shell.go).
 
 ## Complex component composition
 
