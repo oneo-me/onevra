@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.18] - 2026-11-06
+
 - Add `sidebar.ShellOptions.Right` and `RightHeader` for a resizable, collapsible right sidebar outside the floating header
 - Add `components.FileIcon` for file-type icons chosen by name
 - Add `components.HoneycombItem.Images` for a group of overlapping images in one honeycomb cell
