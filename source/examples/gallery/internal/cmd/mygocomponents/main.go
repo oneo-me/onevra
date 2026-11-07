@@ -92,7 +92,7 @@ func scan(dir string) ([]component, error) {
 		}
 		for _, decl := range parsed.Decls {
 			fn, ok := decl.(*ast.FuncDecl)
-			if !ok || fn.Recv != nil || !fn.Name.IsExported() || strings.HasSuffix(fn.Name.Name, "Base") || len(fn.Type.Params.List) == 0 {
+			if !ok || fn.Recv != nil || !fn.Name.IsExported() || strings.Contains(fn.Name.Name, "Base") || len(fn.Type.Params.List) == 0 {
 				continue
 			}
 			pointer, ok := fn.Type.Params.List[0].Type.(*ast.StarExpr)

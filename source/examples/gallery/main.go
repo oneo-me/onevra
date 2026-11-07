@@ -43,6 +43,7 @@ func main() {
 		g.EnableDesktopIntegrations()
 		win.OnClosed(func() { mygo.App.Quit() })
 	})
+	mygo.App.SetDMABUFRenderer(mygo.DMABUFRendererAuto)
 	if err := mygo.App.Run(); err != nil {
 		log.Fatal(err)
 	}

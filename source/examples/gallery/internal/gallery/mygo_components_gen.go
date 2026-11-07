@@ -2,7 +2,7 @@
 
 package gallery
 
-const mygoScanVersion = "v0.7.4"
+const mygoScanVersion = "v0.8.3"
 
 var mygoDiscovered = []mygoComponent{
 	{Name: "Accordion", Source: "ui/api_gen.go"},
@@ -18,6 +18,7 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Calendar", Source: "ui/api_gen.go"},
 	{Name: "Checkbox", Source: "ui/api_gen.go"},
 	{Name: "CheckboxGroup", Source: "ui/api_gen.go"},
+	{Name: "CheckboxState", Source: "ui/api_gen.go"},
 	{Name: "Collapsible", Source: "ui/api_gen.go"},
 	{Name: "ColorPicker", Source: "ui/api_gen.go"},
 	{Name: "ColorWell", Source: "ui/api_gen.go"},

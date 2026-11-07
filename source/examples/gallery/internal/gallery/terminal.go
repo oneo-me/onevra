@@ -76,8 +76,10 @@ func (d *terminalDemo) close() {
 // refresh, on the main thread.
 func (d *terminalDemo) options(refresh func()) terminal.Options {
 	return terminal.Options{
-		PaddingColor: terminal.PaddingExtend,
-		OnSearch:     func(terminal.SearchStatus) { refresh() },
+		PaddingColor:     terminal.PaddingExtend,
+		ShellIntegration: true,
+		Font:             terminal.Font{CellWidth: 1.05},
+		OnSearch:         func(terminal.SearchStatus) { refresh() },
 		OnCopy: func(_ string, by terminal.CopySource) {
 			// Programs copy through OSC 52 as they please; only the user's
 			// copies are told.

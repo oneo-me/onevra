@@ -26,6 +26,7 @@ var audioNotes = []struct {
 // release stops the system driving it.
 type audioDemo struct {
 	output        bool
+	keepPitch     bool
 	pluck, pad    *audio.Sound
 	loop          *audio.Player
 	looping       bool
@@ -51,7 +52,7 @@ func (d *audioDemo) play(speed float64) {
 		return
 	}
 	d.sounds()
-	player := d.pluck.NewPlayer().SetSpeed(speed).SetVolume(d.volume).SetPan(d.pan)
+	player := d.pluck.NewPlayer().SetSpeed(speed).SetVolume(d.volume).SetPan(d.pan).SetPreservesPitch(d.keepPitch)
 	player.OnEnd(func() {
 		d.ended.Add(1)
 		d.refresh()
@@ -232,6 +233,7 @@ func exampleAudio(c *ui.Context, s *demoState) {
 	if changed {
 		d.mix()
 	}
+	components.Switch(c, &d.keepPitch, "SetPreservesPitch")
 	if err := audio.Err(); d.output && err != nil {
 		components.Text(c, msg(c).AudioUnavailable(err.Error())).TextColor(t.Danger).Wrap()
 	}

@@ -39,6 +39,7 @@ const (
 	flyoutPopover
 	flyoutMaterial
 	flyoutFitted
+	flyoutNativeFitted
 )
 
 func (d *flyoutDemo) show(bounds ui.Rect, style flyoutStyle) {
@@ -57,6 +58,11 @@ func (d *flyoutDemo) show(bounds ui.Rect, style flyoutStyle) {
 	if style == flyoutMaterial {
 		// Windows 11 rounds flyouts itself; CornerRadius rounds them on macOS.
 		o.Vibrancy, o.CornerRadius = mygo.VibrancyPopover, 10
+	}
+	if style == flyoutNativeFitted {
+		// The native view sizes the flyout, as a web page does below.
+		o.FitContent = true
+		o.MinWidth, o.MaxWidth, o.MaxHeight = 200, 360, 320
 	}
 	if style == flyoutFitted {
 		// The page sizes the flyout, and resizes it as items are added,
@@ -145,7 +151,7 @@ func flyoutHTML(c *ui.Context) string {
 func exampleFlyout(c *ui.Context, s *demoState) {
 	d := &s.flyout
 	components.Text(c, tr(c, "flyoutDescription")).Wrap()
-	for i, label := range []string{"flyoutEditor", "flyoutPopover", "flyoutMaterial", "flyoutFitted"} {
+	for i, label := range []string{"flyoutEditor", "flyoutPopover", "flyoutMaterial", "flyoutFitted", "flyoutNativeFitted"} {
 		b := components.Button(c, tr(c, label), components.ButtonOutline).Disabled(d.gallery == nil || d.gallery.Shell == nil)
 		if b.Clicked() {
 			d.page = flyoutHTML(c)

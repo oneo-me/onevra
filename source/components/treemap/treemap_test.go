@@ -135,6 +135,18 @@ func TestPointerDrilling(t *testing.T) {
 	}
 }
 
+func TestCanceledPressDrillsNothing(t *testing.T) {
+	state, data := State{}, sample
+	tt, at := tester(&state, &data, Options{Label: "Usage", HideHeader: true}, 1)
+	x, y := at("work/app/target")
+	tt.Press(x, y)
+	tt.CancelPress()
+	tt.Frame()
+	if state.Root != "" {
+		t.Fatalf("canceled press drilled to %q", state.Root)
+	}
+}
+
 func TestKeyboard(t *testing.T) {
 	state, data := State{}, sample
 	tt, _ := tester(&state, &data, Options{Label: "Usage", HideHeader: true, MeasureLabel: "Growth"}, 1)

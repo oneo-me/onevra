@@ -41,7 +41,21 @@ func mygoVariants(name string) []string {
 	case "Transforms":
 		return []string{"Editable controls", "Perspective"}
 	case "Scroll bars":
-		return []string{"Hidden", "Custom view"}
+		return []string{"Hidden", "Custom view", "Kept"}
+	case "Scroll positions":
+		return []string{"Sticky", "Snap", "Into view"}
+	case "Clip & mask":
+		return []string{"Clip", "Masks", "Hit testing", "Depth"}
+	case "Text effects":
+		return []string{"Effects", "Wrapping", "Spans"}
+	case "Shared elements":
+		return []string{"Fly", "Morph", "Exits", "Color"}
+	case "Input events":
+		return []string{"Keys", "Focus", "Pointer", "Page"}
+	case "Widget bases":
+		return []string{"MenuBase", "ContextMenuBase", "AccordionBase", "TreeBase", "CheckboxState", "SelectBaseOpen", "ComboboxBase", "SplitReset", "AttachEdgeMargin"}
+	case "List data":
+		return []string{"Table", "DragRows", "HoldPlace"}
 	case "Toggle", "ToggleGroup", "Checkbox", "Switch":
 		return []string{"Off", "On", "Disabled"}
 	case "CheckboxGroup":

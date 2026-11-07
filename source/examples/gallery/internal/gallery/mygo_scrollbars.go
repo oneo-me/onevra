@@ -14,6 +14,13 @@ const scrollRows = 60
 func exampleScrollbars(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	switch s.variant {
+	case "Kept":
+		components.ScrollView(c, components.ScrollViewOptions{}).KeepScrollbars(true).
+			FillWidth().MaxWidth(t.Space(80)).Height(t.Space(36)).Gap(t.Space(1)).Label("KeepScrollbars").Focusable().Children(func() {
+			for i := range scrollRows {
+				components.Text(c, msg(c).ScrollbarsCard(i+1)).Key(i)
+			}
+		})
 	case "Custom view":
 		row, height := t.Space(6), t.Space(48)
 		view := ui.Box(c).Size(t.Space(80), height).Radius(t.Radius).Border(1, t.Border).Clip().

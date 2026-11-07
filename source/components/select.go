@@ -11,8 +11,16 @@ import (
 // Embedded MyGo parts retain trigger, item and open-state behavior.
 type SelectParts[T comparable] struct {
 	ui.SelectParts[T]
-	c        *ui.Context
-	selected *T
+	c         *ui.Context
+	selected  *T
+	searching bool
+	options   []selectOption[T]
+}
+
+// selectOption is an option built in the current Popup pass.
+type selectOption[T comparable] struct {
+	value T
+	item  ui.Element
 }
 
 // Popup shows a themed, shadowed panel while the select is open. The callback
@@ -20,11 +28,33 @@ type SelectParts[T comparable] struct {
 // It returns an absent Element when closed.
 func (s *SelectParts[T]) Popup(build func(panel ui.Element)) ui.Element {
 	t := s.c.Theme()
-	return s.SelectParts.Popup(func(panel ui.Element) {
+	s.options = s.options[:0]
+	popup := s.SelectParts.Popup(func(panel ui.Element) {
 		panel.Padding(t.Space(1)).Radius(t.Radius*1.5).Material(glass.Glass{Tint: t.Background.Alpha(.92)}).Border(1, t.Border).
 			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, 0.14))
 		build(panel)
 	})
+	if s.searching {
+		s.highlightResult()
+	}
+	return popup
+}
+
+// highlightResult keeps the highlight on a filtered option: MyGo's arrows move
+// from the highlighted option and do not bring back one the query filtered out.
+func (s *SelectParts[T]) highlightResult() {
+	first := -1
+	for i, option := range s.options {
+		if option.item.Highlighted() {
+			return
+		}
+		if first < 0 && !option.item.IsDisabled() {
+			first = i
+		}
+	}
+	if first >= 0 {
+		s.Highlight(s.options[first].value)
+	}
 }
 
 // Item creates a themed option with the same neutral selected face as SidebarItem.
@@ -34,6 +64,7 @@ func (s *SelectParts[T]) Item(value T) ui.Element {
 	t := s.c.Theme()
 	item := s.SelectParts.Item(value).Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius).
 		Background(ui.Color{}).TextColor(t.Text)
+	s.options = append(s.options, selectOption[T]{value, item})
 	if value == *s.selected {
 		item.Background(t.Text.Alpha(.1))
 	} else if item.Hovered() {
@@ -44,10 +75,13 @@ func (s *SelectParts[T]) Item(value T) ui.Element {
 
 // SearchField adds an optional search input inside Popup. Give it an accessible
 // Label and localized Placeholder. Build only matching Items after it; an empty
-// result message and query reset policy belong to the caller. Down or Up returns
-// focus to the trigger, where MyGo handles option navigation and selection.
+// result message and query reset policy belong to the caller. The highlight
+// moves to the first enabled result when filtering removes its option. Down or
+// Up returns focus to the trigger, where MyGo handles option navigation and
+// selection.
 func (s *SelectParts[T]) SearchField(query *string) ui.Element {
 	t := s.c.Theme()
+	s.searching = true
 	input := TextBox(s.c, query, TextBoxOptions{LeadingIcon: lucide.Search()}).
 		FillWidth().AutoFocus().Border(1, t.Border).Radius(t.Radius).Margin(0, 0, t.Space(1.5), 0)
 	if input.Shortcut(0, ui.KeyDown) || input.Shortcut(0, ui.KeyUp) {

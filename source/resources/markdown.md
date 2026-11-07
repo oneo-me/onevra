@@ -44,6 +44,11 @@ Inline math such as \(a^2 + b^2 = c^2\) and \(2\pi \cdot r\) is drawn by the app
 >
 > > A nested quote that wraps on narrow windows.
 
+> [!NOTE]
+> Alerts show with their icon and color, also while a reply streams in.
+
+@octocat mentions and #123 references become links that preview on hover.
+
 ## Table
 
 | Content | Alignment | Value |

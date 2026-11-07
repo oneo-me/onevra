@@ -33,6 +33,7 @@ type demoState struct {
 	markdown        markdown.Options
 	text            string
 	query, queried  string
+	other2          string
 	buffer          *ui.TextBuffer
 	readOnly        bool
 	choice          string
@@ -48,6 +49,10 @@ type demoState struct {
 	list            ui.ListState
 	grid            ui.GridState
 	outline         ui.OutlineState[string]
+	input           inputDemo
+	permission      permissionDemo
+	router          *ui.Router
+	check           ui.CheckState
 }
 
 func newDemoState() *demoState {

@@ -1,6 +1,8 @@
 package gallery
 
 import (
+	"fmt"
+
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
@@ -53,10 +55,22 @@ func exampleNativeDialogs(c *ui.Context, s *demoState) {
 				paths, err := mygo.Dialog.Open(mygo.OpenDialogOptions{
 					Parent:   d.dialogParent(),
 					Title:    m.DialogOpenFiles(),
-					Filters:  []mygo.FileFilter{{Name: m.DialogImages(), Extensions: []string{"png", "jpg", "svg"}}},
+					Filters:  []mygo.FileFilter{{Name: m.DialogImages(), MIMETypes: []string{"image/*"}}},
 					Multiple: true,
 				})
 				return pathRows(m, paths, err)
+			})
+		}
+		if components.Button(c, "TypeIcon", components.ButtonOutline).Clicked() {
+			d.showDialog(m, func() ([][2]string, error) {
+				icon, err := mygo.Shell.TypeIcon("pdf", 64)
+				buttons := mygo.Theme.WindowButtons()
+				return [][2]string{{"TypeIcon", fmt.Sprint(len(icon), " B")}, {"WindowButtons", fmt.Sprint(buttons.Start, buttons.End)}}, err
+			})
+		}
+		if components.Button(c, "SetGTKCSS", components.ButtonOutline).Clicked() {
+			d.showDialog(m, func() ([][2]string, error) {
+				return [][2]string{{"SetGTKCSS", "headerbar { min-height: 38px; }"}}, mygo.Theme.SetGTKCSS("headerbar { min-height: 38px; }")
 			})
 		}
 		if components.Button(c, m.DialogOpenFolder(), components.ButtonOutline).Clicked() {

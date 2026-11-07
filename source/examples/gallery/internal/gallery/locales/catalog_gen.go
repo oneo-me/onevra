@@ -11378,3 +11378,373 @@ func ComponentTypesetting() string { return In(i18n.Locale()).ComponentTypesetti
 func (msgs Messages) ComponentTypesetting() string {
 	return Catalog.Format(msgs.locale, "componentTypesetting", nil)
 }
+
+// StickyEvent says "Team review"
+// in the language the app shows.
+func StickyEvent() string { return In(i18n.Locale()).StickyEvent() }
+
+// StickyEvent says "Team review"
+// in the language of msgs.
+func (msgs Messages) StickyEvent() string {
+	return Catalog.Format(msgs.locale, "stickyEvent", nil)
+}
+
+// TextEffectsSample says "Golden hour over the quiet harbor"
+// in the language the app shows.
+func TextEffectsSample() string { return In(i18n.Locale()).TextEffectsSample() }
+
+// TextEffectsSample says "Golden hour over the quiet harbor"
+// in the language of msgs.
+func (msgs Messages) TextEffectsSample() string {
+	return Catalog.Format(msgs.locale, "textEffectsSample", nil)
+}
+
+// TextEffectsSpaced says "Keep   these   spaces"
+// in the language the app shows.
+func TextEffectsSpaced() string { return In(i18n.Locale()).TextEffectsSpaced() }
+
+// TextEffectsSpaced says "Keep   these   spaces"
+// in the language of msgs.
+func (msgs Messages) TextEffectsSpaced() string {
+	return Catalog.Format(msgs.locale, "textEffectsSpaced", nil)
+}
+
+// MorphShort says "Ocean"
+// in the language the app shows.
+func MorphShort() string { return In(i18n.Locale()).MorphShort() }
+
+// MorphShort says "Ocean"
+// in the language of msgs.
+func (msgs Messages) MorphShort() string {
+	return Catalog.Format(msgs.locale, "morphShort", nil)
+}
+
+// MorphLong says "Ocean at dusk"
+// in the language the app shows.
+func MorphLong() string { return In(i18n.Locale()).MorphLong() }
+
+// MorphLong says "Ocean at dusk"
+// in the language of msgs.
+func (msgs Messages) MorphLong() string {
+	return Catalog.Format(msgs.locale, "morphLong", nil)
+}
+
+// MarkdownCopyLink says "Copy link"
+// in the language the app shows.
+func MarkdownCopyLink() string { return In(i18n.Locale()).MarkdownCopyLink() }
+
+// MarkdownCopyLink says "Copy link"
+// in the language of msgs.
+func (msgs Messages) MarkdownCopyLink() string {
+	return Catalog.Format(msgs.locale, "markdownCopyLink", nil)
+}
+
+// FlyoutNativeFitted says "Fitted native view"
+// in the language the app shows.
+func FlyoutNativeFitted() string { return In(i18n.Locale()).FlyoutNativeFitted() }
+
+// FlyoutNativeFitted says "Fitted native view"
+// in the language of msgs.
+func (msgs Messages) FlyoutNativeFitted() string {
+	return Catalog.Format(msgs.locale, "flyoutNativeFitted", nil)
+}
+
+// NotificationPicture says "Show a picture"
+// in the language the app shows.
+func NotificationPicture() string { return In(i18n.Locale()).NotificationPicture() }
+
+// NotificationPicture says "Show a picture"
+// in the language of msgs.
+func (msgs Messages) NotificationPicture() string {
+	return Catalog.Format(msgs.locale, "notificationPicture", nil)
+}
+
+// ComponentScrollPositions says "Scroll positions"
+// in the language the app shows.
+func ComponentScrollPositions() string { return In(i18n.Locale()).ComponentScrollPositions() }
+
+// ComponentScrollPositions says "Scroll positions"
+// in the language of msgs.
+func (msgs Messages) ComponentScrollPositions() string {
+	return Catalog.Format(msgs.locale, "componentScrollPositions", nil)
+}
+
+// ComponentClipMask says "Clip & mask"
+// in the language the app shows.
+func ComponentClipMask() string { return In(i18n.Locale()).ComponentClipMask() }
+
+// ComponentClipMask says "Clip & mask"
+// in the language of msgs.
+func (msgs Messages) ComponentClipMask() string {
+	return Catalog.Format(msgs.locale, "componentClipMask", nil)
+}
+
+// ComponentSharedElements says "Shared elements"
+// in the language the app shows.
+func ComponentSharedElements() string { return In(i18n.Locale()).ComponentSharedElements() }
+
+// ComponentSharedElements says "Shared elements"
+// in the language of msgs.
+func (msgs Messages) ComponentSharedElements() string {
+	return Catalog.Format(msgs.locale, "componentSharedElements", nil)
+}
+
+// ComponentRouterMatch says "Router match"
+// in the language the app shows.
+func ComponentRouterMatch() string { return In(i18n.Locale()).ComponentRouterMatch() }
+
+// ComponentRouterMatch says "Router match"
+// in the language of msgs.
+func (msgs Messages) ComponentRouterMatch() string {
+	return Catalog.Format(msgs.locale, "componentRouterMatch", nil)
+}
+
+// ComponentInputEvents says "Input events"
+// in the language the app shows.
+func ComponentInputEvents() string { return In(i18n.Locale()).ComponentInputEvents() }
+
+// ComponentInputEvents says "Input events"
+// in the language of msgs.
+func (msgs Messages) ComponentInputEvents() string {
+	return Catalog.Format(msgs.locale, "componentInputEvents", nil)
+}
+
+// ComponentWidgetBases says "Widget bases"
+// in the language the app shows.
+func ComponentWidgetBases() string { return In(i18n.Locale()).ComponentWidgetBases() }
+
+// ComponentWidgetBases says "Widget bases"
+// in the language of msgs.
+func (msgs Messages) ComponentWidgetBases() string {
+	return Catalog.Format(msgs.locale, "componentWidgetBases", nil)
+}
+
+// ComponentTextEffects says "Text effects"
+// in the language the app shows.
+func ComponentTextEffects() string { return In(i18n.Locale()).ComponentTextEffects() }
+
+// ComponentTextEffects says "Text effects"
+// in the language of msgs.
+func (msgs Messages) ComponentTextEffects() string {
+	return Catalog.Format(msgs.locale, "componentTextEffects", nil)
+}
+
+// ComponentListData says "List data"
+// in the language the app shows.
+func ComponentListData() string { return In(i18n.Locale()).ComponentListData() }
+
+// ComponentListData says "List data"
+// in the language of msgs.
+func (msgs Messages) ComponentListData() string {
+	return Catalog.Format(msgs.locale, "componentListData", nil)
+}
+
+// ComponentFormatting says "Formatting"
+// in the language the app shows.
+func ComponentFormatting() string { return In(i18n.Locale()).ComponentFormatting() }
+
+// ComponentFormatting says "Formatting"
+// in the language of msgs.
+func (msgs Messages) ComponentFormatting() string {
+	return Catalog.Format(msgs.locale, "componentFormatting", nil)
+}
+
+// ComponentSFSymbols says "SF Symbols"
+// in the language the app shows.
+func ComponentSFSymbols() string { return In(i18n.Locale()).ComponentSFSymbols() }
+
+// ComponentSFSymbols says "SF Symbols"
+// in the language of msgs.
+func (msgs Messages) ComponentSFSymbols() string {
+	return Catalog.Format(msgs.locale, "componentSFSymbols", nil)
+}
+
+// ComponentPermissionFlow says "Permission flow"
+// in the language the app shows.
+func ComponentPermissionFlow() string { return In(i18n.Locale()).ComponentPermissionFlow() }
+
+// ComponentPermissionFlow says "Permission flow"
+// in the language of msgs.
+func (msgs Messages) ComponentPermissionFlow() string {
+	return Catalog.Format(msgs.locale, "componentPermissionFlow", nil)
+}
+
+// VariantKept says "Kept"
+// in the language the app shows.
+func VariantKept() string { return In(i18n.Locale()).VariantKept() }
+
+// VariantKept says "Kept"
+// in the language of msgs.
+func (msgs Messages) VariantKept() string {
+	return Catalog.Format(msgs.locale, "variantKept", nil)
+}
+
+// VariantSticky says "Sticky"
+// in the language the app shows.
+func VariantSticky() string { return In(i18n.Locale()).VariantSticky() }
+
+// VariantSticky says "Sticky"
+// in the language of msgs.
+func (msgs Messages) VariantSticky() string {
+	return Catalog.Format(msgs.locale, "variantSticky", nil)
+}
+
+// VariantSnap says "Snap"
+// in the language the app shows.
+func VariantSnap() string { return In(i18n.Locale()).VariantSnap() }
+
+// VariantSnap says "Snap"
+// in the language of msgs.
+func (msgs Messages) VariantSnap() string {
+	return Catalog.Format(msgs.locale, "variantSnap", nil)
+}
+
+// VariantIntoView says "Into view"
+// in the language the app shows.
+func VariantIntoView() string { return In(i18n.Locale()).VariantIntoView() }
+
+// VariantIntoView says "Into view"
+// in the language of msgs.
+func (msgs Messages) VariantIntoView() string {
+	return Catalog.Format(msgs.locale, "variantIntoView", nil)
+}
+
+// VariantClip says "Clip"
+// in the language the app shows.
+func VariantClip() string { return In(i18n.Locale()).VariantClip() }
+
+// VariantClip says "Clip"
+// in the language of msgs.
+func (msgs Messages) VariantClip() string {
+	return Catalog.Format(msgs.locale, "variantClip", nil)
+}
+
+// VariantMasks says "Masks"
+// in the language the app shows.
+func VariantMasks() string { return In(i18n.Locale()).VariantMasks() }
+
+// VariantMasks says "Masks"
+// in the language of msgs.
+func (msgs Messages) VariantMasks() string {
+	return Catalog.Format(msgs.locale, "variantMasks", nil)
+}
+
+// VariantHitTesting says "Hit testing"
+// in the language the app shows.
+func VariantHitTesting() string { return In(i18n.Locale()).VariantHitTesting() }
+
+// VariantHitTesting says "Hit testing"
+// in the language of msgs.
+func (msgs Messages) VariantHitTesting() string {
+	return Catalog.Format(msgs.locale, "variantHitTesting", nil)
+}
+
+// VariantDepth says "Depth"
+// in the language the app shows.
+func VariantDepth() string { return In(i18n.Locale()).VariantDepth() }
+
+// VariantDepth says "Depth"
+// in the language of msgs.
+func (msgs Messages) VariantDepth() string {
+	return Catalog.Format(msgs.locale, "variantDepth", nil)
+}
+
+// VariantEffects says "Effects"
+// in the language the app shows.
+func VariantEffects() string { return In(i18n.Locale()).VariantEffects() }
+
+// VariantEffects says "Effects"
+// in the language of msgs.
+func (msgs Messages) VariantEffects() string {
+	return Catalog.Format(msgs.locale, "variantEffects", nil)
+}
+
+// VariantWrapping says "Wrapping"
+// in the language the app shows.
+func VariantWrapping() string { return In(i18n.Locale()).VariantWrapping() }
+
+// VariantWrapping says "Wrapping"
+// in the language of msgs.
+func (msgs Messages) VariantWrapping() string {
+	return Catalog.Format(msgs.locale, "variantWrapping", nil)
+}
+
+// VariantSpans says "Spans"
+// in the language the app shows.
+func VariantSpans() string { return In(i18n.Locale()).VariantSpans() }
+
+// VariantSpans says "Spans"
+// in the language of msgs.
+func (msgs Messages) VariantSpans() string {
+	return Catalog.Format(msgs.locale, "variantSpans", nil)
+}
+
+// VariantFly says "Fly"
+// in the language the app shows.
+func VariantFly() string { return In(i18n.Locale()).VariantFly() }
+
+// VariantFly says "Fly"
+// in the language of msgs.
+func (msgs Messages) VariantFly() string {
+	return Catalog.Format(msgs.locale, "variantFly", nil)
+}
+
+// VariantMorph says "Morph"
+// in the language the app shows.
+func VariantMorph() string { return In(i18n.Locale()).VariantMorph() }
+
+// VariantMorph says "Morph"
+// in the language of msgs.
+func (msgs Messages) VariantMorph() string {
+	return Catalog.Format(msgs.locale, "variantMorph", nil)
+}
+
+// VariantExits says "Exits"
+// in the language the app shows.
+func VariantExits() string { return In(i18n.Locale()).VariantExits() }
+
+// VariantExits says "Exits"
+// in the language of msgs.
+func (msgs Messages) VariantExits() string {
+	return Catalog.Format(msgs.locale, "variantExits", nil)
+}
+
+// VariantKeys says "Keys"
+// in the language the app shows.
+func VariantKeys() string { return In(i18n.Locale()).VariantKeys() }
+
+// VariantKeys says "Keys"
+// in the language of msgs.
+func (msgs Messages) VariantKeys() string {
+	return Catalog.Format(msgs.locale, "variantKeys", nil)
+}
+
+// VariantFocus says "Focus"
+// in the language the app shows.
+func VariantFocus() string { return In(i18n.Locale()).VariantFocus() }
+
+// VariantFocus says "Focus"
+// in the language of msgs.
+func (msgs Messages) VariantFocus() string {
+	return Catalog.Format(msgs.locale, "variantFocus", nil)
+}
+
+// VariantPointer says "Pointer"
+// in the language the app shows.
+func VariantPointer() string { return In(i18n.Locale()).VariantPointer() }
+
+// VariantPointer says "Pointer"
+// in the language of msgs.
+func (msgs Messages) VariantPointer() string {
+	return Catalog.Format(msgs.locale, "variantPointer", nil)
+}
+
+// VariantPage says "Page"
+// in the language the app shows.
+func VariantPage() string { return In(i18n.Locale()).VariantPage() }
+
+// VariantPage says "Page"
+// in the language of msgs.
+func (msgs Messages) VariantPage() string {
+	return Catalog.Format(msgs.locale, "variantPage", nil)
+}

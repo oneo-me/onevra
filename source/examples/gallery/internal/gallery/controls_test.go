@@ -342,11 +342,11 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyRight)
 					changed = s.value != 40
 				case "Split":
-					click("Default divider")
+					clickDivider(tt)
 					tt.Key(0, ui.KeyRight)
 					changed = s.split != 100
 				case "SplitPercent":
-					click("Default divider")
+					clickDivider(tt)
 					tt.Key(0, ui.KeyRight)
 					changed = s.splitPercent != 30
 				case "TagInput":
@@ -558,5 +558,13 @@ func TestControlReadOnlyExamples(t *testing.T) {
 		if s.text != before {
 			t.Fatal("read-only example accepted input")
 		}
+	}
+}
+
+// clickDivider presses a split's handle, which lies over the named divider and
+// focuses it.
+func clickDivider(tt *ui.Tester) {
+	if r, ok := tt.Find("Default divider"); ok {
+		tt.ClickAt(r.X+r.W/2, r.Y+r.H/2)
 	}
 }

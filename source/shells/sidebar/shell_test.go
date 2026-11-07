@@ -444,6 +444,7 @@ func TestShellToastsClearHeaderByDefault(t *testing.T) {
 	}
 	var header float32
 	ui.NewTester(func(c *ui.Context) { header = HeaderHeight(c) }, 820, 600)
+	tt.Advance(time.Second) // The toast enters from beyond the window's edge.
 	if r, ok := tt.Find("Saved"); !ok || r.Y < header || r.Y > header+80 {
 		t.Fatalf("default toast does not sit below the header %v: %+v", header, r)
 	}

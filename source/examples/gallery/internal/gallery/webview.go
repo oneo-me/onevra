@@ -291,6 +291,7 @@ func exampleWebView(c *ui.Context, s *demoState) {
 			}
 			d.view.Page().LoadHTML(html, webViewBaseURL)
 		}
+		components.Text(c, fmt.Sprint("GPUProcessID ", d.view.Page().GPUProcessID())).TextColor(t.TextMuted)
 		ui.Row(c).Gap(t.Space(2)).AlignItems(ui.Center).Children(func() {
 			if components.Button(c, tr(c, "reloadPage"), components.ButtonSecondary).Clicked() {
 				d.view.Page().LoadHTML(d.loaded, webViewBaseURL)

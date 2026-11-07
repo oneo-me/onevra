@@ -160,9 +160,10 @@ type cardDrag struct {
 
 // cardRelease is a drag let go, for the next build to decide or return.
 type cardRelease struct {
-	id   string
-	x, y float32
-	v    cardPoint
+	id       string
+	x, y     float32
+	v        cardPoint
+	canceled bool
 }
 
 // cardStackMotion is the retained presentation of a CardStack.
@@ -300,14 +301,15 @@ func CardStack(c *ui.Context, state *CardStackState, options CardStackOptions) C
 		}
 
 		// A drag let go throws the card when it went far or was flicked, and
-		// otherwise springs it home with its velocity.
+		// otherwise, as when the system took the press, springs it home with
+		// its velocity.
 		if r := sm.release; r != nil {
 			sm.release = nil
 			if p := position(); p < len(items) && items[p].ID == r.id {
 				dir := cardSign(r.x)
 				flick := cardAbs(r.v.x) > cardStackFlick*s && cardSign(r.v.x) == dir && cardAbs(r.x) > 12*s
 				far := cardAbs(r.x) > min(width*.35, 140*s) && !(cardSign(r.v.x) == -dir && cardAbs(r.v.x) > 300*s)
-				if dir != 0 && (flick || far) {
+				if dir != 0 && !r.canceled && (flick || far) {
 					sm.flings[r.id] = r.v
 					if dir > 0 {
 						decide(CardRight)
@@ -495,7 +497,7 @@ func (sm *cardStackMotion) input(ev ui.InputEvent) bool {
 			return false
 		}
 		sm.drag = nil
-		sm.release = &cardRelease{d.id, d.x, d.y, cardVelocity(d.samples, ev.Time)}
+		sm.release = &cardRelease{d.id, d.x, d.y, cardVelocity(d.samples, ev.Time), ev.Canceled}
 	default:
 		return false
 	}

@@ -3,6 +3,7 @@ package components
 import (
 	"slices"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/theme"
@@ -72,6 +73,7 @@ func TestToastsLocalizedCloseAndLeadingSlot(t *testing.T) {
 	if !leading || !tt.HasText("Uploading") {
 		t.Fatalf("leading slot %v, texts %q", leading, tt.Texts())
 	}
+	tt.Advance(time.Second) // The toast enters from beyond the window's edge.
 	if err := tt.Click("关闭"); err != nil {
 		t.Fatal(err)
 	}

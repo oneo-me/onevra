@@ -26,9 +26,9 @@ func TestScaledControlCoordinates(t *testing.T) {
 			if low != 30 || high != 80 {
 				t.Fatalf("scaled range = %v, %v", low, high)
 			}
-			if err := tt.Click("Divider"); err != nil {
-				t.Fatal(err)
-			}
+			// The handle over the line takes the press and focuses it.
+			r, _ = tt.Find("Divider")
+			tt.ClickAt(r.X+r.W/2, r.Y+r.H/2)
 			tt.Key(0, ui.KeyEnd)
 			if size != 259 {
 				t.Fatalf("scaled split maximum = %v", size)

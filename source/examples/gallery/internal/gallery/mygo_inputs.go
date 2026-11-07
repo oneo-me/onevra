@@ -20,5 +20,7 @@ func exampleInputStyling(c *ui.Context, s *demoState) {
 		Placeholder(tr(c, "inputTypeDelete")).PlaceholderColor(t.Danger).FillWidth().MaxWidth(t.Space(80))
 	components.TextBox(c, &s.query, components.TextBoxOptions{}).Label(tr(c, "inputBlockCaret")).
 		Placeholder(tr(c, "inputBlockCaret")).CaretWidth(t.FontSize * .6).Font("monospace").FillWidth().MaxWidth(t.Space(80))
+	components.TextBox(c, &s.other2, components.TextBoxOptions{}).Label("CaretColor, MaxLength").
+		Placeholder("CaretColor, MaxLength").CaretColor(t.Accent).MaxLength(12).FillWidth().MaxWidth(t.Space(80))
 	components.Text(c, tr(c, "inputDottedLink")).TextColor(t.Accent).DottedUnderline()
 }

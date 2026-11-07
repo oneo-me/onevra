@@ -30,7 +30,7 @@ func (v *view) input(ev ui.InputEvent) bool {
 	case ui.InputPointerUp:
 		if v.pressed && ev.Button == 0 {
 			v.pressed = false
-			if math.Hypot(float64(ev.X-v.pressX), float64(ev.Y-v.pressY)) < tapSlop {
+			if !ev.Canceled && math.Hypot(float64(ev.X-v.pressX), float64(ev.Y-v.pressY)) < tapSlop {
 				v.clicks = append(v.clicks, click{v.pressX, v.pressY})
 			}
 		}

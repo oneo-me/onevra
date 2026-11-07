@@ -4,6 +4,9 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: Require MyGo 0.8.3.
+- Fix `components.CardStack`, `components.Honeycomb` and `treemap` acting on a press the system cancels
+
 ## [0.2026.18] - 2026-11-06
 
 - Add `sidebar.ShellOptions.Right` and `RightHeader` for a resizable, collapsible right sidebar outside the floating header

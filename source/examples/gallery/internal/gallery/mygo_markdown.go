@@ -10,6 +10,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/markdown"
+	"github.com/egoist/mygo/ui/markdown/parser"
 	"github.com/oneo-me/onevra/source/components"
 )
 
@@ -49,6 +50,23 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 			s.index++
 		}
 		s.markdown.InlineMath = inlineMath()
+		s.markdown.LinkIcon = linkIcon()
+		s.markdown.Resolve = func(in parser.Inline) (string, bool) {
+			if in.Kind == parser.Mention || in.Kind == parser.Reference {
+				return "https://github.com/" + strings.TrimPrefix(in.Text, "@"), true
+			}
+			return "", false
+		}
+	}
+	s.markdown.LinkMenu = func(m *ui.Menu, url string) {
+		if m.Item(tr(c, "markdownCopyLink")).Chosen() {
+			c.WriteClipboard(url)
+		}
+	}
+	s.markdown.Preview = func(c *ui.Context, dest string) func(tip ui.Element) {
+		return func(tip ui.Element) {
+			tip.Padding(c.Theme().Space(2)).Children(func() { components.Text(c, dest) })
+		}
 	}
 	s.markdown.Code = map[string]func(*ui.Context, *markdown.CodeBlockView){
 		"counter": func(c *ui.Context, block *markdown.CodeBlockView) {
@@ -61,7 +79,19 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 			})
 		},
 	}
-	markdown.View(c, source, &s.markdown).FillWidth()
+	view := markdown.View(c, source, &s.markdown).FillWidth()
+	if markdown.Revealed(view) {
+		components.Text(c, "Revealed").TextColor(c.Theme().TextMuted)
+	}
+}
+
+// linkIcon puts a small dot at the start of each link.
+func linkIcon() func(dest string, size float32) (markdown.InlineObject, bool) {
+	return func(_ string, size float32) (markdown.InlineObject, bool) {
+		return markdown.InlineObject{Width: size * .6, Height: size * .6, Draw: func(p *ui.Painter, r ui.Rect) {
+			p.Fill(ui.Rect{X: r.X + size/8, Y: r.Y + size/8, W: size / 4, H: size / 4}, p.Theme().Accent, size/8)
+		}}, true
+	}
 }
 
 // markdownHeadings are the fixture's section headings and their slugs; the

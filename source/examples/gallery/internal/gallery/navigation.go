@@ -16,12 +16,15 @@ var navigationGroups = []string{
 // own. A route is in at most one list; a route added since the release stays
 // new however often it changes.
 var newPages = map[string]bool{
-	"mygo/DecimalInput": true, "mygo/Input styling": true, "mygo/PopoverMenuButton": true, "mygo/Ignore input": true,
-	"mygo/Themed": true, "mygo/Scroll bars": true, "mygo/Typesetting": true, "mygo/Video": true,
+	"mygo/Scroll positions": true, "mygo/Clip & mask": true, "mygo/Shared elements": true, "mygo/Router match": true,
+	"mygo/Input events": true, "mygo/Widget bases": true, "mygo/Text effects": true, "mygo/List data": true,
+	"mygo/Formatting": true, "mygo/SF Symbols": true, "mygo/Permission flow": true,
 }
 
 var updatedPages = map[string]bool{
-	"mygo/Gradients & blur": true, "mygo/Markdown": true, "mygo/Rich text editor": true, "mygo/Native dialogs": true,
+	"mygo/Scroll bars": true, "mygo/Input styling": true, "mygo/PopoverMenuButton": true, "mygo/Themed": true,
+	"mygo/Markdown": true, "mygo/Code editor": true, "mygo/Diff viewer": true, "mygo/Terminal": true, "mygo/Glass": true,
+	"mygo/Audio": true, "mygo/Native dialogs": true, "mygo/Flyout": true, "mygo/WebView": true,
 }
 
 type navigationEntry struct {

@@ -167,6 +167,27 @@ func TestCardStackKeys(t *testing.T) {
 	}
 }
 
+func TestCardStackCanceledDragReturns(t *testing.T) {
+	var state CardStackState
+	var events []CardStackEvent
+	tt := cardStackTester(&state, &events)
+	tt.Frame()
+	r, ok := tt.Find("Lisbon, 1 of 3")
+	if !ok {
+		t.Fatal("no top card")
+	}
+	x, y := r.X+r.W/2, r.Y+r.H/4
+	tt.Press(x, y)
+	tt.Advance(16 * time.Millisecond)
+	tt.Move(x+r.W, y)
+	tt.Advance(16 * time.Millisecond)
+	tt.CancelPress()
+	settleCardStack(tt)
+	if len(state.Decisions) != 0 || len(events) != 0 {
+		t.Fatalf("canceled drag decided %v, events %v", state.Decisions, events)
+	}
+}
+
 func TestCardStackFollowsApplicationDecisions(t *testing.T) {
 	state := CardStackState{Decisions: []CardStackDecision{{"a", CardLeft}}}
 	var events []CardStackEvent

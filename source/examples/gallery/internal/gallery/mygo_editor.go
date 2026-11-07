@@ -3,6 +3,7 @@ package gallery
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
@@ -67,13 +68,22 @@ func exampleCodeEditor(c *ui.Context, s *demoState) {
 		return
 	}
 	if s.code == nil {
-		s.code = &editor.State{Buffer: editorBuffer(editorSample), DiffBase: editorBuffer(editorSample), WrapGuides: []int{80}}
+		s.code = &editor.State{Buffer: editorBuffer(editorSample), DiffBase: editorBuffer(editorSample), WrapGuides: []int{80},
+			HoverDelay: 200 * time.Millisecond}
 	}
 	s.code.Label, s.code.Font = tr(c, "codeEditorLabel"), editorFont(c)
+	ui.Row(c).Gap(c.Theme().Space(2)).AlignItems(ui.Center).Wrap().Children(func() {
+		if components.Button(c, "InsertSnippet", components.ButtonOutline).Clicked() {
+			if snippet, err := editor.ParseSnippet("print(${1:value})$0"); err == nil {
+				s.code.InsertSnippet(snippet)
+			}
+		}
+		components.Switch(c, &s.code.NoPointerHover, "NoPointerHover")
+	})
 	components.TextBox(c, &s.query, components.TextBoxOptions{}).Label(tr(c, "codeEditorHighlight")).
 		Placeholder(tr(c, "codeEditorHighlight")).FillWidth().MaxWidth(c.Theme().Space(60))
 	highlightMatches(c, s)
-	editor.View(c, s.code).Height(320).FillWidth().Radius(8).Clip()
+	editor.View(c, s.code).KeepScrollbars(true).Height(320).FillWidth().Radius(8).Clip()
 	pos := s.code.CursorPos()
 	components.Text(c, msg(c).CodeEditorPosition(pos.Line+1, pos.Col+1)).TextColor(c.Theme().TextMuted)
 }
@@ -86,7 +96,12 @@ func exampleDiffViewer(c *ui.Context, s *demoState) {
 		}
 	}
 	s.diff.Font = editorFont(c)
+	if components.Button(c, "SetScrollY", components.ButtonOutline).Clicked() {
+		s.diff.SetScrollY(s.diff.LineTop(editor.DiffNew, 0))
+	}
 	editor.DiffView(c, s.diff).Height(360).FillWidth().Radius(8).Clip()
+	components.Text(c, fmt.Sprintf("SplitPercent %.0f, ScrollY %.0f / %.0f", s.diff.SplitPercent, s.diff.ScrollY(), s.diff.ViewportHeight())).
+		TextColor(c.Theme().TextMuted)
 	added, deleted := s.diff.Stats()
 	components.Text(c, msg(c).DiffViewerStats(added, deleted)).TextColor(c.Theme().TextMuted)
 }

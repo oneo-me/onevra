@@ -15,6 +15,8 @@ type glassDemo struct {
 	edge int
 	// clarity clears the draggable pane, a pane large enough to frost.
 	clarity float64
+	// native puts the system's Liquid Glass under the panes.
+	native bool
 }
 
 // glassEdges maps the edge choice to the bars' styles.
@@ -48,6 +50,14 @@ func glassPreview(c *ui.Context, s *demoState, bitmap *ui.Bitmap) {
 		components.Text(c, name).Shrink(0).SingleLine()
 		components.Slider(c, &s.glass.clarity, 0, 1).Label(name).Grow(1).MinWidth(0)
 	})
+	components.Switch(c, &s.glass.native, "Native")
+	group := glass.NewGroup(c)
+	group.Radius = 16
+	group.Gap(c.Theme().Space(1)).Children(func() {
+		for _, name := range []string{"regular", "tinted"} {
+			group.Pane(ui.Box(c).Key(name).Padding(8, 16)).Children(func() { components.Text(c, tr(c, name)) })
+		}
+	})
 	t := c.Theme()
 	canvas := ui.Box(c).FillWidth().Height(420).Radius(20).Clip().Border(1, t.Border).Label(tr(c, "glassCanvas"))
 	previousWidth := canvas.Bounds().W
@@ -57,7 +67,7 @@ func glassPreview(c *ui.Context, s *demoState, bitmap *ui.Bitmap) {
 			c.Invalidate()
 		}
 	})
-	material := glass.Glass{}
+	material := glass.Glass{Native: s.glass.native}
 	color := t.Text
 	switch s.index {
 	case 1:

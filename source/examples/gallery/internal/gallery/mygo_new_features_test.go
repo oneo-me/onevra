@@ -153,16 +153,22 @@ func TestNewMyGoReviewEntries(t *testing.T) {
 
 func TestCodeAndGameGroups(t *testing.T) {
 	want := map[string][]string{"Code & diffs": {"Code editor", "Diff viewer"}, "Games": {"Canvas", "Shaders", "Game loop", "3D renderer"}}
+	// Pages in New or Updated components leave their purpose group, and a
+	// group left without pages shows no more.
+	for label, entries := range want {
+		want[label] = slices.DeleteFunc(slices.Clone(entries), func(name string) bool {
+			return newPages["mygo/"+name] || updatedPages["mygo/"+name]
+		})
+		if len(want[label]) == 0 {
+			delete(want, label)
+		}
+	}
 	for _, group := range mygoNavigationGroups() {
 		if entries, ok := want[group.label]; ok {
 			var got []string
 			for _, entry := range group.entries {
 				got = append(got, entry.label)
 			}
-			// Pages in New or Updated components leave their purpose group.
-			entries = slices.DeleteFunc(slices.Clone(entries), func(name string) bool {
-				return newPages["mygo/"+name] || updatedPages["mygo/"+name]
-			})
 			if fmt.Sprint(got) != fmt.Sprint(entries) {
 				t.Fatalf("%s = %v, want %v", group.label, got, entries)
 			}

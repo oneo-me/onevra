@@ -619,11 +619,13 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 		}
 		p.pressed = false
 		if p.travel < honeycombTap {
-			p.clicked = p.hit(ev.X, ev.Y)
+			if !ev.Canceled {
+				p.clicked = p.hit(ev.X, ev.Y)
+			}
 			return true
 		}
-		if ev.Time.Sub(p.moved) > 80*time.Millisecond {
-			// Held still before letting go.
+		if ev.Canceled || ev.Time.Sub(p.moved) > 80*time.Millisecond {
+			// Held still before letting go, or the system took the press.
 			p.vx, p.vy = 0, 0
 		}
 		p.released = true

@@ -140,6 +140,19 @@ func TestHoneycombCentersTheClickedItem(t *testing.T) {
 	}
 }
 
+func TestHoneycombCanceledPressChoosesNothing(t *testing.T) {
+	selected := "p00"
+	tt := honeycombTester(honeycombItems(9), &selected)
+	tt.Frame()
+	x, y := middle(mustFind(t, tt, "p04"))
+	tt.Press(x, y)
+	tt.CancelPress()
+	tt.Frame()
+	if selected != "p00" {
+		t.Fatalf("canceled press chose %q", selected)
+	}
+}
+
 func TestHoneycombOffsetsItsMiddle(t *testing.T) {
 	items := honeycombItems(19)
 	selected := "p00"
@@ -874,4 +887,13 @@ func TestHoneycombGroupsImages(t *testing.T) {
 	if len(sizes) != 4 || tt.HasText("+1") {
 		t.Fatalf("four images: %v %v", sizes, tt.Texts())
 	}
+}
+
+func mustFind(t *testing.T, tt *ui.Tester, label string) ui.Rect {
+	t.Helper()
+	r, ok := tt.Find(label)
+	if !ok {
+		t.Fatalf("no %q", label)
+	}
+	return r
 }
