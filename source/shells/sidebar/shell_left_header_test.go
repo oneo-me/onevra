@@ -2,6 +2,7 @@ package sidebar
 
 import (
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/icons/lucide"
@@ -53,5 +54,67 @@ func TestShellLeftHeader(t *testing.T) {
 	tt.Frame()
 	if _, ok := tt.Find("Back"); !ok {
 		t.Fatal("workspace did not restore header actions")
+	}
+}
+
+func TestShellLeftToggleTrailing(t *testing.T) {
+	options := ShellOptions{LeftWidth: 252, LeftHeader: func(c *ui.Context) {
+		IconButton(c, lucide.ArrowLeft(), "Back")
+	}, ContentTitle: func(c *ui.Context) { ui.Text(c, "Document") }}
+	tester := func(s *Shell) *ui.Tester {
+		tt := ui.NewTester(s.view, 980, 820)
+		tt.SetTitleBar(ui.TitleBar{Height: 48, Left: 80})
+		return tt
+	}
+	find := func(tt *ui.Tester, label string) ui.Rect {
+		t.Helper()
+		r, ok := tt.Find(label)
+		if !ok {
+			t.Fatalf("missing %q", label)
+		}
+		return r
+	}
+	leading := tester(newShell(options))
+	leading.SetPreferences(ui.Preferences{ReduceMotion: true})
+	leadingToggle := find(leading, "Toggle sidebar")
+
+	options.LeftToggleTrailing = true
+	s := newShell(options)
+	tt := tester(s)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	toggle, back := find(tt, "Toggle sidebar"), find(tt, "Back")
+	if toggle.X+toggle.W != 244 || toggle.Y != leadingToggle.Y {
+		t.Fatalf("toggle not trailing in sidebar header: %+v", toggle)
+	}
+	if back.X+back.W != toggle.X || back.Y != toggle.Y {
+		t.Fatalf("header actions not before toggle: %+v %+v", back, toggle)
+	}
+	if title := find(tt, "Document"); title.X != find(leading, "Document").X {
+		t.Fatalf("trailing toggle moved content title: %+v", title)
+	}
+	if err := tt.Click("Toggle sidebar"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if s.LeftExpanded() || find(tt, "Toggle sidebar") != leadingToggle {
+		t.Fatal("collapsed sidebar did not keep the leading toggle")
+	}
+	tt.SetPreferences(ui.Preferences{})
+	s.SetLeftExpanded(true)
+	tt.Frame()
+	tt.Advance(55 * time.Millisecond)
+	tt.Frame()
+	if find(tt, "Toggle sidebar") != leadingToggle {
+		t.Fatal("animating sidebar moved the toggle")
+	}
+	tt.Advance(sidebarDuration + 30*time.Millisecond)
+	tt.Frame()
+	if r := find(tt, "Toggle sidebar"); r.X+r.W != 244 {
+		t.Fatalf("expanded sidebar did not restore trailing toggle: %+v", r)
+	}
+	s.SetPage(func(*ui.Context) {})
+	tt.Frame()
+	if _, ok := tt.Find("Toggle sidebar"); ok {
+		t.Fatal("replacement page retained the toggle")
 	}
 }
