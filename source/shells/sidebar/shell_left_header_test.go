@@ -118,3 +118,28 @@ func TestShellLeftToggleTrailing(t *testing.T) {
 		t.Fatal("replacement page retained the toggle")
 	}
 }
+
+func TestShellTitleInsetWithTrailingToggle(t *testing.T) {
+	options := ShellOptions{LeftWidth: 252, TitleInsetLeft: 12, LeftHeader: func(c *ui.Context) {
+		IconButton(c, lucide.ArrowLeft(), "Back")
+	}, ContentTitle: func(c *ui.Context) { ui.Text(c, "Document") }}
+	title := func(trailing bool) ui.Rect {
+		options.LeftToggleTrailing = trailing
+		s := newShell(options)
+		tt := ui.NewTester(s.view, 980, 820)
+		tt.SetTitleBar(ui.TitleBar{Height: 48, Left: 80})
+		tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+		r, ok := tt.Find("Document")
+		if !ok {
+			t.Fatal("missing title")
+		}
+		return r
+	}
+	leading, trailing := title(false), title(true)
+	if trailing.X != leading.X {
+		t.Fatalf("trailing toggle moved the inset title: %+v vs %+v", leading, trailing)
+	}
+	if leading.X != 256 { // 252+16-12: the aligned position shifted by the inset
+		t.Fatalf("TitleInsetLeft did not shift the aligned title: %+v", leading)
+	}
+}

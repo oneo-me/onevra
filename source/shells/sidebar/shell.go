@@ -37,6 +37,15 @@ type ShellOptions struct {
 	// a title, breadcrumbs or actions; nil leaves it blank. Shell clips it to
 	// the room after the sidebar control and hides it on replacement pages.
 	ContentTitle func(*ui.Context)
+	// TitleInsetLeft is the room between the sidebar header's content and the
+	// title: 24 by default, which aligns the title with the main surface. A
+	// smaller value draws the title toward the sidebar, a larger one toward
+	// the main surface; the collapsed and animating sidebar shifts by the same
+	// amount, keeping its toggle clearance. Non-positive values use 24.
+	TitleInsetLeft float32
+	// TitleInsetRight is the title slot's trailing padding; non-positive
+	// values use 8.
+	TitleInsetRight float32
 	// LeftHeader builds trailing actions beside the sidebar toggle, within the
 	// expanded sidebar's header. It is clipped to the available safe area and
 	// omitted while collapsed, animating, or showing a replacement page.
@@ -448,6 +457,14 @@ func (s *Shell) build(c *ui.Context) {
 				// The sidebar's header ends 8 DIPs before its edge.
 				leftRoom := leftWidth - 8 - leftInset
 				var titleInset float32
+				inset := float32(24)
+				if s.options.TitleInsetLeft > 0 {
+					inset = s.options.TitleInsetLeft
+				}
+				insetRight := float32(8)
+				if s.options.TitleInsetRight > 0 {
+					insetRight = s.options.TitleInsetRight
+				}
 				if s.options.LeftToggleTrailing && s.leftOpen && leftProgress == 1 && leftRoom >= toggleSize {
 					ui.Row(c).Key("left-header").Width(leftRoom).Shrink(0).FillHeight().
 						AlignItems(ui.Center).Clip().Children(func() {
@@ -475,7 +492,10 @@ func (s *Shell) build(c *ui.Context) {
 						titleInset = 24
 					}
 				}
-				ui.Row(c).Grow(1).MinWidth(0).FillHeight().Clip().Padding(0, 8, 0, titleInset).Children(func() {
+				// The consumer's inset shifts the title by its difference from
+				// the default: the header keeps its room, the title moves.
+				titleInset += inset - 24
+				ui.Row(c).Grow(1).MinWidth(0).FillHeight().Clip().Padding(0, insetRight, 0, titleInset).Children(func() {
 					if s.options.ContentTitle != nil {
 						s.options.ContentTitle(c)
 					}
