@@ -1164,5 +1164,12 @@
   "variantKeys": "按鍵",
   "variantFocus": "焦點",
   "variantPointer": "指標",
-  "variantPage": "頁面"
+  "variantPage": "頁面",
+  "componentSplitButton": "分段按鈕",
+  "componentPrimarySplitButton": "主分段按鈕",
+  "componentNativeView": "原生檢視",
+  "componentRender": "影片算繪",
+  "componentNetworkImage": "網路圖片",
+  "variantInstances": "實例化繪製",
+  "variantMoveAnimation": "位移動畫"
 }

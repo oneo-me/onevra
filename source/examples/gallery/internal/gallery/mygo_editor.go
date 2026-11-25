@@ -69,13 +69,21 @@ func exampleCodeEditor(c *ui.Context, s *demoState) {
 	}
 	if s.code == nil {
 		s.code = &editor.State{Buffer: editorBuffer(editorSample), DiffBase: editorBuffer(editorSample), WrapGuides: []int{80},
-			HoverDelay: 200 * time.Millisecond}
+			HoverDelay: 200 * time.Millisecond, ScrollMargin: 2}
 	}
 	s.code.Label, s.code.Font = tr(c, "codeEditorLabel"), editorFont(c)
 	ui.Row(c).Gap(c.Theme().Space(2)).AlignItems(ui.Center).Wrap().Children(func() {
 		if components.Button(c, "InsertSnippet", components.ButtonOutline).Clicked() {
 			if snippet, err := editor.ParseSnippet("print(${1:value})$0"); err == nil {
 				s.code.InsertSnippet(snippet)
+			}
+		}
+		if components.Button(c, "SetLineStyles", components.ButtonOutline).Clicked() {
+			s.on = !s.on
+			if s.on {
+				s.code.SetLineStyles([]editor.LineStyle{{Line: 0, Font: ui.Font{Size: c.Theme().FontSize + 3, Weight: 700}}})
+			} else {
+				s.code.SetLineStyles(nil)
 			}
 		}
 		components.Switch(c, &s.code.NoPointerHover, "NoPointerHover")
@@ -90,15 +98,20 @@ func exampleCodeEditor(c *ui.Context, s *demoState) {
 
 func exampleDiffViewer(c *ui.Context, s *demoState) {
 	if s.diff == nil {
-		s.diff = &editor.DiffState{Old: editorBuffer(editorSample), New: editorBuffer(editorRevision), Editable: true, HunkActions: true}
+		s.diff = &editor.DiffState{Old: editorBuffer(editorSample), New: editorBuffer(editorRevision), Editable: true, HunkActions: true, ScrollPastEnd: true}
 		if s.variant == "Unified" {
 			s.diff.Layout = editor.DiffUnified
 		}
 	}
 	s.diff.Font = editorFont(c)
-	if components.Button(c, "SetScrollY", components.ButtonOutline).Clicked() {
-		s.diff.SetScrollY(s.diff.LineTop(editor.DiffNew, 0))
-	}
+	ui.Row(c).Gap(c.Theme().Space(2)).Wrap().Children(func() {
+		if components.Button(c, "SetScrollY", components.ButtonOutline).Clicked() {
+			s.diff.SetScrollY(s.diff.LineTop(editor.DiffNew, 0))
+		}
+		if components.Button(c, "Focus", components.ButtonOutline).Clicked() {
+			s.diff.Focus()
+		}
+	})
 	editor.DiffView(c, s.diff).Height(360).FillWidth().Radius(8).Clip()
 	components.Text(c, fmt.Sprintf("SplitPercent %.0f, ScrollY %.0f / %.0f", s.diff.SplitPercent, s.diff.ScrollY(), s.diff.ViewportHeight())).
 		TextColor(c.Theme().TextMuted)

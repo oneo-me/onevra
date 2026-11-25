@@ -1164,5 +1164,12 @@
   "variantKeys": "キー",
   "variantFocus": "フォーカス",
   "variantPointer": "ポインター",
-  "variantPage": "ページ"
+  "variantPage": "ページ",
+  "componentSplitButton": "スプリットボタン",
+  "componentPrimarySplitButton": "プライマリスプリットボタン",
+  "componentNativeView": "ネイティブビュー",
+  "componentRender": "動画レンダー",
+  "componentNetworkImage": "ネットワーク画像",
+  "variantInstances": "インスタンス描画",
+  "variantMoveAnimation": "移動アニメーション"
 }

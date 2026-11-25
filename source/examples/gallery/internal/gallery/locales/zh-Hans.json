@@ -1164,5 +1164,12 @@
   "variantKeys": "按键",
   "variantFocus": "焦点",
   "variantPointer": "指针",
-  "variantPage": "页面"
+  "variantPage": "页面",
+  "componentSplitButton": "分段按钮",
+  "componentPrimarySplitButton": "主分段按钮",
+  "componentNativeView": "原生视图",
+  "componentRender": "视频渲染",
+  "componentNetworkImage": "网络图片",
+  "variantInstances": "实例化绘制",
+  "variantMoveAnimation": "位移动画"
 }

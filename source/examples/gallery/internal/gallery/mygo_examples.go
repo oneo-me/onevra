@@ -21,6 +21,8 @@ type demoState struct {
 	terminal        terminalDemo
 	webView         webViewDemo
 	video           videoDemo
+	render          renderDemo
+	netImage        netImageDemo
 	audio           audioDemo
 	system          systemDemo
 	canvas          canvasDemo

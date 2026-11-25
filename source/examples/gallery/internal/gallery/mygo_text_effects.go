@@ -18,10 +18,12 @@ func exampleTextEffects(c *ui.Context, s *demoState) {
 			components.Text(c, sample).Pretty().Label("Pretty")
 			components.Text(c, tr(c, "textEffectsSpaced")).PreserveSpaces().Label("PreserveSpaces")
 			components.Text(c, "a\tb\tc").TabSize(8).Font("monospace").Label("TabSize")
+			components.Text(c, "source/examples/gallery/internal/gallery/mygo_text_effects.go").SingleLine().TruncateStart().
+				MaxWidth(t.Space(55)).Font("monospace").Label("TruncateStart")
 		case "Spans":
 			components.RichText(c, ui.Span{Text: sample, Shadow: ui.NewTextShadow(0, 1, 3, t.Accent)},
 				ui.Span{Text: " "},
-				ui.Span{Text: "mygo", Font: "monospace", Background: t.Surface, Radius: t.Radius / 2, PaddingX: t.Space(1), PaddingY: t.Space(.5), NoLetterSpacing: true}).
+				ui.Span{Text: "mygo", Font: "monospace", Background: t.Surface, Radius: t.Radius / 2, PaddingX: t.Space(1), PaddingY: t.Space(.5), PaddingStart: t.Space(2), NoLetterSpacing: true}).
 				LetterSpacing(.5).Label("Span")
 		default:
 			components.Text(c, sample).FontSize(t.FontSize*2).Bold().TextShadow(0, 2, 6, t.Accent).Label("TextShadow")

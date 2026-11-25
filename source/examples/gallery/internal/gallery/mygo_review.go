@@ -152,6 +152,8 @@ var mygoDirectExamples = map[string]string{
 	"Rich text editor":   "Use MyGo's ui/richtext directly for attributed text editing; Onevra RichText composes read-only inline text, not an editor",
 	"Markdown":           "Use MyGo's ui/markdown directly for documents; applications own images, links and custom code blocks through its options",
 	"Markdown stream":    "Use MyGo's ui/markdown directly for streaming replies",
+	"NativeView":         "Use MyGo's NativeView directly to embed platform views from native modules; nil renders fallback children",
+	"Network image":      "Use MyGo's ui/netimage directly for URL-backed images with placeholders and caching",
 }
 
 // Element methods are not found by the free-function scanner. These native menu
@@ -167,6 +169,7 @@ var mygoSubpackages = map[string]string{
 	"Charts": "ui/chart", "Code editor": "ui/editor", "Diff viewer": "ui/editor",
 	"Rich text editor": "ui/richtext", "Markdown": "ui/markdown", "Markdown stream": "ui/markdown",
 	"Shaders": "ui/shader", "Live chart": "ui/chart",
+	"Network image": "ui/netimage", "Render": "plugins/render",
 	"Installed apps": "examples/launcher",
 }
 

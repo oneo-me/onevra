@@ -14,10 +14,10 @@ import (
 // galleryShaders compiles on first use, so pages never shown never start the
 // GPU driver's compilation.
 type galleryShaders struct {
-	plasma, wave, frost *shader.Shader
-	plasmaTime          shader.Uniform
-	plasmaTint          shader.Uniform
-	frostTint           shader.Uniform
+	plasma, wave, frost, tiles *shader.Shader
+	plasmaTime                 shader.Uniform
+	plasmaTint                 shader.Uniform
+	frostTint                  shader.Uniform
 }
 
 var loadShaders = sync.OnceValue(func() *galleryShaders {
@@ -47,6 +47,12 @@ var Tint vec4
 
 func Fragment(dst vec4, pos vec2) vec4 {
 	return mix(backdropSample(pos), vec4(Tint.rgb, 1), Tint.a)
+}
+`),
+		tiles: shader.MustCompile(`package main
+
+func Fragment(dst vec4, pos vec2) vec4 {
+	return vec4(instanceData(0), instanceData(1), instanceData(2), 1)
 }
 `),
 	}
@@ -219,6 +225,20 @@ func exampleShaders(c *ui.Context, s *demoState) {
 			components.Text(c, name).Shrink(0).SingleLine()
 			components.Slider(c, &s.value, 0, 80).Label(name).Grow(1).MinWidth(0)
 		})
+	case "Instances":
+		ui.Box(c).Size(320, 120).Label("DrawInstances").Draw(func(p *ui.Painter, r ui.Rect) {
+			const cols, rows = 8, 3
+			rects := make([]ui.Rect, 0, cols*rows)
+			data := make([]float32, 0, cols*rows*3)
+			w, h := (r.W-28)/cols, (r.H-16)/rows
+			for row := range rows {
+				for col := range cols {
+					rects = append(rects, ui.Rect{X: r.X + float32(col)*(w+4), Y: r.Y + float32(row)*(h+4), W: w, H: h})
+					data = append(data, float32(col+1)/cols, float32(row+1)/rows, .75)
+				}
+			}
+			sh.tiles.DrawInstances(p, shader.Instances{Rects: rects, Data: data, Stride: 3}, shader.Options{Radius: 6})
+		})
 	default:
 		ui.Box(c).Size(320, 140).Label(tr(c, "shaderPlasma")).Draw(func(p *ui.Painter, r ui.Rect) {
 			sh.plasma.Draw(p, r, shader.Options{
@@ -255,7 +275,13 @@ func exampleLiveChart(c *ui.Context, s *demoState) {
 		}
 	}
 	x, y := chart.NewLinear(-float64(streamSamples)/400, 0), chart.NewLinear(0, 1)
-	chart.Plot(c, chart.Axes{Left: y.Ticks(5), Bottom: x.Ticks(5)}, func(area ui.Element) {
+	var yTicks []chart.Tick
+	if s.other {
+		yTicks = chart.NewLog(0.05, 2).Ticks(4)
+	} else {
+		yTicks = y.Ticks(5)
+	}
+	chart.Plot(c, chart.Axes{Left: yTicks, Bottom: x.Ticks(5)}, func(area ui.Element) {
 		area.Label(tr(c, "liveChartLabel")).Draw(func(p *ui.Painter, r ui.Rect) {
 			// The series advances with the frame clock, and stays where it
 			// is while paused.
@@ -290,5 +316,8 @@ func exampleLiveChart(c *ui.Context, s *demoState) {
 			})
 		})
 	}).Height(220).FillWidth().Gap(8)
-	components.Checkbox(c, &s.on, tr(c, "timelinePause"))
+	ui.Row(c).Gap(t.Space(3)).Wrap().Children(func() {
+		components.Checkbox(c, &s.on, tr(c, "timelinePause"))
+		components.Checkbox(c, &s.other, "Log")
+	})
 }

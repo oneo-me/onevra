@@ -42,6 +42,9 @@ func examplePopoverMenuButton(c *ui.Context, s *demoState) {
 		if m.Item(tr(c, "delete")).Chosen() {
 			s.choice, s.count = "delete", s.count+1
 		}
+	}, ui.PopoverMenuOptions{
+		Panel: func(panel ui.Element) { panel.Radius(t.Radius * 1.5) },
+		Item:  func(item ui.Element) { item.Radius(t.Radius) },
 	}).Children(func() { components.Text(c, tr(c, "rightClickHere")).TextColor(t.TextMuted) })
 	order := tr(c, sortKeys[s.index])
 	if s.on {
@@ -75,7 +78,12 @@ func richMenu(c *ui.Context, s *demoState) {
 				components.Progress(content.Context, .6).FillWidth()
 			})
 			m.Item(tr(c, "delete")).ID("delete").Danger()
-		}, ui.PopoverMenuButtonOptions{At: ui.AnchorBottomEnd, Self: ui.AnchorTopEnd, Open: &s.open})
+		}, ui.PopoverMenuButtonOptions{
+			At:   ui.AnchorBottomEnd,
+			Self: ui.AnchorTopEnd,
+			Open: &s.open,
+			Item: func(item ui.Element) { item.Radius(t.Radius) },
+		})
 		presentation := c.MenuPresentation() == ui.PopoverMenus
 		if components.Switch(c, &presentation, "SetMenuPresentation").Changed() {
 			if presentation {

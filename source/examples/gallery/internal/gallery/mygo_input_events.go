@@ -20,6 +20,8 @@ type inputDemo struct {
 	inside    int
 	pointer   string
 	draft     string
+	field     ui.Handle
+	touches   int
 	written   bool
 	writeErr  error
 }
@@ -39,9 +41,12 @@ func exampleInputEvents(c *ui.Context, s *demoState) {
 	column.Children(func() {
 		switch s.variant {
 		case "Focus":
-			field := components.TextBox(c, &d.draft, components.TextBoxOptions{}).Label("FocusLeft").MaxLength(12).FillWidth()
+			field := components.TextBox(c, &d.draft, components.TextBoxOptions{}).Bind(&d.field).Label("FocusLeft").MaxLength(12).FillWidth()
 			if field.FocusLeft() {
 				d.left++
+			}
+			if components.Button(c, "SelectAll", components.ButtonOutline).Clicked() {
+				d.field.SelectAll(c)
 			}
 			line("FocusLeft", fmt.Sprint(d.left))
 			line("FocusTakesText", fmt.Sprint(c.FocusTakesText()))
@@ -120,11 +125,15 @@ func pointerEvents(c *ui.Context, s *demoState, line func(name, value string)) {
 	if area.PressCanceled() {
 		d.pointer = "PressCanceled"
 	}
+	if touches := area.Touches(); len(touches) > 0 {
+		d.touches = len(touches)
+	}
 	area.Children(func() {
 		components.Button(c, "PressedInside", components.ButtonOutline)
 	})
 	line("PressedPointer", d.pointer)
 	line("PressedInside", fmt.Sprint(d.inside))
+	line("Touches", fmt.Sprint(d.touches))
 	chip := ui.Box(c).Padding(t.Space(2), t.Space(3)).Radius(t.Radius).Background(t.Surface).Label("DragMissed").Drag("chip")
 	chip.Children(func() { components.Text(c, "DragMissed") })
 	if at, ok := chip.DragMissed(); ok {

@@ -19,12 +19,15 @@ var newPages = map[string]bool{
 	"mygo/Scroll positions": true, "mygo/Clip & mask": true, "mygo/Shared elements": true, "mygo/Router match": true,
 	"mygo/Input events": true, "mygo/Widget bases": true, "mygo/Text effects": true, "mygo/List data": true,
 	"mygo/Formatting": true, "mygo/SF Symbols": true, "mygo/Permission flow": true,
+	"mygo/SplitButton": true, "mygo/PrimarySplitButton": true, "mygo/NativeView": true,
+	"mygo/Render": true, "mygo/Network image": true,
 }
 
 var updatedPages = map[string]bool{
 	"mygo/Scroll bars": true, "mygo/Input styling": true, "mygo/PopoverMenuButton": true, "mygo/Themed": true,
 	"mygo/Markdown": true, "mygo/Code editor": true, "mygo/Diff viewer": true, "mygo/Terminal": true, "mygo/Glass": true,
 	"mygo/Audio": true, "mygo/Native dialogs": true, "mygo/Flyout": true, "mygo/WebView": true,
+	"mygo/Shaders": true, "mygo/Live chart": true, "mygo/System information": true,
 }
 
 type navigationEntry struct {

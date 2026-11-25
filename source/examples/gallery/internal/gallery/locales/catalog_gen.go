@@ -11748,3 +11748,73 @@ func VariantPage() string { return In(i18n.Locale()).VariantPage() }
 func (msgs Messages) VariantPage() string {
 	return Catalog.Format(msgs.locale, "variantPage", nil)
 }
+
+// ComponentSplitButton says "SplitButton"
+// in the language the app shows.
+func ComponentSplitButton() string { return In(i18n.Locale()).ComponentSplitButton() }
+
+// ComponentSplitButton says "SplitButton"
+// in the language of msgs.
+func (msgs Messages) ComponentSplitButton() string {
+	return Catalog.Format(msgs.locale, "componentSplitButton", nil)
+}
+
+// ComponentPrimarySplitButton says "PrimarySplitButton"
+// in the language the app shows.
+func ComponentPrimarySplitButton() string { return In(i18n.Locale()).ComponentPrimarySplitButton() }
+
+// ComponentPrimarySplitButton says "PrimarySplitButton"
+// in the language of msgs.
+func (msgs Messages) ComponentPrimarySplitButton() string {
+	return Catalog.Format(msgs.locale, "componentPrimarySplitButton", nil)
+}
+
+// ComponentNativeView says "NativeView"
+// in the language the app shows.
+func ComponentNativeView() string { return In(i18n.Locale()).ComponentNativeView() }
+
+// ComponentNativeView says "NativeView"
+// in the language of msgs.
+func (msgs Messages) ComponentNativeView() string {
+	return Catalog.Format(msgs.locale, "componentNativeView", nil)
+}
+
+// ComponentRender says "Render"
+// in the language the app shows.
+func ComponentRender() string { return In(i18n.Locale()).ComponentRender() }
+
+// ComponentRender says "Render"
+// in the language of msgs.
+func (msgs Messages) ComponentRender() string {
+	return Catalog.Format(msgs.locale, "componentRender", nil)
+}
+
+// ComponentNetworkImage says "Network image"
+// in the language the app shows.
+func ComponentNetworkImage() string { return In(i18n.Locale()).ComponentNetworkImage() }
+
+// ComponentNetworkImage says "Network image"
+// in the language of msgs.
+func (msgs Messages) ComponentNetworkImage() string {
+	return Catalog.Format(msgs.locale, "componentNetworkImage", nil)
+}
+
+// VariantInstances says "Instances"
+// in the language the app shows.
+func VariantInstances() string { return In(i18n.Locale()).VariantInstances() }
+
+// VariantInstances says "Instances"
+// in the language of msgs.
+func (msgs Messages) VariantInstances() string {
+	return Catalog.Format(msgs.locale, "variantInstances", nil)
+}
+
+// VariantMoveAnimation says "MoveAnimation"
+// in the language the app shows.
+func VariantMoveAnimation() string { return In(i18n.Locale()).VariantMoveAnimation() }
+
+// VariantMoveAnimation says "MoveAnimation"
+// in the language of msgs.
+func (msgs Messages) VariantMoveAnimation() string {
+	return Catalog.Format(msgs.locale, "variantMoveAnimation", nil)
+}

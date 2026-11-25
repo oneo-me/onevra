@@ -37,7 +37,7 @@ func mygoVariants(name string) []string {
 	case "Gradients & blur":
 		return []string{"Gradient stops", "Conic", "Radial", "Borders", "Blur"}
 	case "Shaders":
-		return []string{"Fragment", "Text and paths", "Element effect", "Backdrop"}
+		return []string{"Fragment", "Text and paths", "Element effect", "Backdrop", "Instances"}
 	case "Transforms":
 		return []string{"Editable controls", "Perspective"}
 	case "Scroll bars":
@@ -55,7 +55,7 @@ func mygoVariants(name string) []string {
 	case "Widget bases":
 		return []string{"MenuBase", "ContextMenuBase", "AccordionBase", "TreeBase", "CheckboxState", "SelectBaseOpen", "ComboboxBase", "SplitReset", "AttachEdgeMargin"}
 	case "List data":
-		return []string{"Table", "DragRows", "HoldPlace"}
+		return []string{"Table", "DragRows", "HoldPlace", "MoveAnimation"}
 	case "Toggle", "ToggleGroup", "Checkbox", "Switch":
 		return []string{"Off", "On", "Disabled"}
 	case "CheckboxGroup":
@@ -70,7 +70,7 @@ func mygoVariants(name string) []string {
 		return []string{"Unrated", "Rated", "Disabled"}
 	case "Radio", "RadioGroup", "Select", "Tabs", "Sidebar":
 		return []string{"Default", "Selected", "Disabled"}
-	case "Button", "PrimaryButton", "Link",
+	case "Button", "PrimaryButton", "Link", "SplitButton", "PrimarySplitButton",
 		"Slider", "StepSlider", "RangeSlider", "Stepper", "NumberInput", "EditableText",
 		"Calendar", "DateInput", "TimeInput", "ColorWell", "ColorPicker":
 		return []string{"Default", "Disabled"}

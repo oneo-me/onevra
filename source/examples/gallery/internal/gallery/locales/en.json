@@ -1631,5 +1631,12 @@
   "variantKeys": "Keys",
   "variantFocus": "Focus",
   "variantPointer": "Pointer",
-  "variantPage": "Page"
+  "variantPage": "Page",
+  "componentSplitButton": "SplitButton",
+  "componentPrimarySplitButton": "PrimarySplitButton",
+  "componentNativeView": "NativeView",
+  "componentRender": "Render",
+  "componentNetworkImage": "Network image",
+  "variantInstances": "Instances",
+  "variantMoveAnimation": "MoveAnimation"
 }

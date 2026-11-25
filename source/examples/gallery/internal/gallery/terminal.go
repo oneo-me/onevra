@@ -370,5 +370,7 @@ func (g *Gallery) Close() {
 		s.system.close()
 		s.flyout.close()
 		s.video.close()
+		s.render.close()
+		s.netImage.close()
 	}
 }

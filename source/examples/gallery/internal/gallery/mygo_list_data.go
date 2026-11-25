@@ -39,7 +39,30 @@ func exampleListData(c *ui.Context, s *demoState) {
 				}
 			})
 		}).FillWidth().MaxWidth(t.Space(70)).Height(t.Space(40)).Border(1, t.Border).Radius(t.Radius).KeepScrollbars(true)
+	case "MoveAnimation":
+		order := []string{"open", "duplicate", "delete", "name", "date", "size"}
+		if s.on {
+			order = []string{"size", "date", "name", "delete", "duplicate", "open"}
+		}
+		anim := ui.Smooth
+		s.list.Key = func(row int) any { return order[row] }
+		s.list.MoveAnimation = &anim
+		s.list.Selected = &s.index
+		s.list.EndReached = func(int) { s.count++ }
+		ui.Row(c).Gap(t.Space(2)).Wrap().Children(func() {
+			if components.Button(c, "MoveAnimation", components.ButtonOutline).Clicked() {
+				s.on = !s.on
+			}
+			if components.Button(c, "Choose(2)", components.ButtonOutline).Clicked() {
+				s.list.Choose(2)
+			}
+		})
+		ui.List(c, &s.list, len(order), func(i int) {
+			components.Text(c, tr(c, order[i])).Padding(t.Space(1), t.Space(2))
+		}).Width(t.Space(50)).Height(t.Space(36)).Border(1, t.Border).Radius(t.Radius)
+		components.Text(c, msg(c).CountD(s.count)).TextColor(t.TextMuted)
 	default:
+		s.list.RowHeight = t.Space(7)
 		s.list.CellSelect = true
 		s.list.CellsStyle = ui.CellsStyle{Cell: t.Accent.Alpha(.3), CellText: t.Text, Row: t.Accent.Alpha(.08), Stripe: t.Surface}
 		s.list.HeaderCell = func(cell ui.Element, col int) {

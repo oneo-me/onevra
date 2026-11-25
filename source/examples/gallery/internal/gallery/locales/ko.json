@@ -1164,5 +1164,12 @@
   "variantKeys": "키",
   "variantFocus": "포커스",
   "variantPointer": "포인터",
-  "variantPage": "페이지"
+  "variantPage": "페이지",
+  "componentSplitButton": "분할 버튼",
+  "componentPrimarySplitButton": "기본 분할 버튼",
+  "componentNativeView": "네이티브 뷰",
+  "componentRender": "비디오 렌더",
+  "componentNetworkImage": "네트워크 이미지",
+  "variantInstances": "인스턴스 그리기",
+  "variantMoveAnimation": "이동 애니메이션"
 }

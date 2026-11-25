@@ -96,3 +96,75 @@ func TestListDataFollowsItsEnd(t *testing.T) {
 	}
 	tt.Frame()
 }
+
+func TestSplitButtonsClick(t *testing.T) {
+	g, s, tt := featureTester("SplitButton", "Default", "en", 640)
+	if err := tt.Click(g.text("secretsSave")); err != nil {
+		t.Fatal(err)
+	}
+	if s.choice != "secretsSave" || s.count != 1 {
+		t.Fatalf("choice=%q count=%d", s.choice, s.count)
+	}
+	g2, s2, tt2 := featureTester("PrimarySplitButton", "Default", "en", 640)
+	if err := tt2.Click(g2.text("apply")); err != nil {
+		t.Fatal(err)
+	}
+	if s2.choice != "apply" || s2.count != 1 {
+		t.Fatalf("primary choice=%q count=%d", s2.choice, s2.count)
+	}
+}
+
+func TestRenderPreviewsAndCloses(t *testing.T) {
+	g, s, tt := featureTester("Render", "Default", "en", 640)
+	if s.render.player == nil {
+		t.Fatal("render player not created")
+	}
+	tt.Frame()
+	g.Close()
+	if s.render.player != nil {
+		t.Fatal("render player not closed")
+	}
+}
+
+func TestNetworkImageStartsOnActionAndCloses(t *testing.T) {
+	g, s, tt := featureTester("Network image", "Default", "en", 640)
+	if s.netImage.server != nil {
+		t.Fatal("server started before user action")
+	}
+	if err := tt.Click(g.text("open")); err != nil {
+		t.Fatal(err)
+	}
+	if s.netImage.server == nil || s.netImage.url == "" {
+		t.Fatal("server did not start on action")
+	}
+	tt.Frame()
+	g.Close()
+	if s.netImage.server != nil {
+		t.Fatal("server not closed")
+	}
+}
+
+func TestListDataMoveAnimationAndChoose(t *testing.T) {
+	_, s, tt := featureTester("List data", "MoveAnimation", "en", 640)
+	if err := tt.Click("MoveAnimation"); err != nil {
+		t.Fatal(err)
+	}
+	if !s.on {
+		t.Fatal("MoveAnimation toggle did not flip")
+	}
+	if err := tt.Click("Choose(2)"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if s.index != 2 {
+		t.Fatalf("selected index = %d", s.index)
+	}
+}
+
+func TestShadersInstancesDraws(t *testing.T) {
+	_, _, tt := featureTester("Shaders", "Instances", "en", 640)
+	tt.Frame()
+	if _, ok := tt.Find("DrawInstances"); !ok {
+		t.Fatal("DrawInstances box not found")
+	}
+}

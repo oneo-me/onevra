@@ -383,6 +383,9 @@ func exampleSystemAppearance(c *ui.Context, s *demoState) {
 	systemRow(c, m.AppearanceTextScale(), i18n.FormatNumber(c.Locale(), scale, i18n.NumberOptions{Percent: true}))
 	if s.system.native {
 		systemRow(c, m.AppearanceAppActive(), yesNo(m, mygo.App.IsActive()))
+		if w := s.system.window(); w != nil {
+			systemRow(c, "CornerRadius", i18n.FormatNumber(c.Locale(), w.CornerRadius(), i18n.NumberOptions{}))
+		}
 	}
 }
 
@@ -397,6 +400,7 @@ func exampleLanguages(c *ui.Context, s *demoState) {
 	var preferred []string
 	if s.system.native {
 		preferred = mygo.App.PreferredLanguages()
+		systemRow(c, "ChosenLocale", mygo.App.ChosenLocale())
 	}
 	names := make([]string, 0, len(preferred))
 	for _, tag := range preferred {

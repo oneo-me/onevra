@@ -2,7 +2,7 @@
 
 package gallery
 
-const mygoScanVersion = "v0.8.3"
+const mygoScanVersion = "v0.10.0"
 
 var mygoDiscovered = []mygoComponent{
 	{Name: "Accordion", Source: "ui/api_gen.go"},
@@ -43,6 +43,7 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "MenuButton", Source: "ui/api_gen.go"},
 	{Name: "Meter", Source: "ui/api_gen.go"},
 	{Name: "Modal", Source: "ui/api_gen.go"},
+	{Name: "NativeView", Source: "ui/api_gen.go"},
 	{Name: "NumberInput", Source: "ui/api_gen.go"},
 	{Name: "Outline", Source: "ui/api_gen.go"},
 	{Name: "OutlineTable", Source: "ui/api_gen.go"},
@@ -50,6 +51,7 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Popover", Source: "ui/api_gen.go"},
 	{Name: "PopoverMenuButton", Source: "ui/api_gen.go"},
 	{Name: "PrimaryButton", Source: "ui/api_gen.go"},
+	{Name: "PrimarySplitButton", Source: "ui/api_gen.go"},
 	{Name: "Progress", Source: "ui/api_gen.go"},
 	{Name: "Radio", Source: "ui/api_gen.go"},
 	{Name: "RadioGroup", Source: "ui/api_gen.go"},
@@ -70,6 +72,7 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Spacer", Source: "ui/api_gen.go"},
 	{Name: "Spinner", Source: "ui/api_gen.go"},
 	{Name: "Split", Source: "ui/api_gen.go"},
+	{Name: "SplitButton", Source: "ui/api_gen.go"},
 	{Name: "SplitPercent", Source: "ui/api_gen.go"},
 	{Name: "SplitVertical", Source: "ui/api_gen.go"},
 	{Name: "SplitVerticalPercent", Source: "ui/api_gen.go"},

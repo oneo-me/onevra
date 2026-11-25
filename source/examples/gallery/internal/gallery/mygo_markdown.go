@@ -57,6 +57,13 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 			}
 			return "", false
 		}
+		s.markdown.CodeLink = func(code string) (string, bool) {
+			if code == "mygo" {
+				return "https://mygo.run", true
+			}
+			return "", false
+		}
+		s.markdown.OnTask = func(int, bool) { s.index++ }
 	}
 	s.markdown.LinkMenu = func(m *ui.Menu, url string) {
 		if m.Item(tr(c, "markdownCopyLink")).Chosen() {
