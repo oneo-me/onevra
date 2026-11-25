@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.19] - 2026-11-25
+
 - Breaking: Require MyGo 0.10.0.
 - Add `sidebar.ShellOptions.LeftToggleTrailing` to place the left sidebar toggle at the expanded sidebar's trailing edge (#17 by @sunny0826)
 - Fix `components.CardStack`, `components.Honeycomb` and `treemap` acting on a press the system cancels

@@ -30,10 +30,10 @@
 
 ## Install
 
-Onevra requires Go 1.27.3 or later. Install **0.2026.18** in your application module:
+Onevra requires Go 1.27.3 or later. Install **0.2026.19** in your application module:
 
 ```sh
-go get github.com/oneo-me/onevra/source@v0.2026.18
+go get github.com/oneo-me/onevra/source@v0.2026.19
 ```
 
 ## Usage

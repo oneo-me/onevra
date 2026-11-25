@@ -30,10 +30,10 @@
 
 ## 安装
 
-Onevra 需要 Go 1.27.3 或更高版本。在应用模块中安装 **0.2026.18**：
+Onevra 需要 Go 1.27.3 或更高版本。在应用模块中安装 **0.2026.19**：
 
 ```sh
-go get github.com/oneo-me/onevra/source@v0.2026.18
+go get github.com/oneo-me/onevra/source@v0.2026.19
 ```
 
 ## 用法
