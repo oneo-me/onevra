@@ -52,3 +52,8 @@ func (s *Shell) captionButtons(c *ui.Context) {
 		}
 	})
 }
+
+// captionWidth is the width of the caption buttons' row.
+func captionWidth(c *ui.Context) float32 {
+	return 3*max(32, c.Theme().Rem(2)) + 2*4
+}

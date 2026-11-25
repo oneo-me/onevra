@@ -41,6 +41,10 @@ type ShellOptions struct {
 	// expanded sidebar's header. It is clipped to the available safe area and
 	// omitted while collapsed, animating, or showing a replacement page.
 	LeftHeader func(*ui.Context)
+	// LeftToggleTrailing moves the sidebar toggle to the trailing edge of the
+	// expanded sidebar's header, after LeftHeader, when it fits. While the
+	// sidebar is collapsed or animating, the toggle keeps its leading place.
+	LeftToggleTrailing bool
 	// LeftToolbar builds a fixed bottom toolbar beneath Left; nil omits it.
 	// Use IconButton for actions and ui.Spacer for trailing alignment.
 	LeftToolbar func(*ui.Context)
@@ -435,19 +439,41 @@ func (s *Shell) build(c *ui.Context) {
 			AlignItems(ui.Center).Padding(6, mainInset, 6, leftInset).
 			DragWindow().Children(func() {
 			if page == nil {
-				if IconButton(c, lucide.PanelLeft(), l10n.In(c.Locale()).Text("toggleSidebar")).Clicked() {
-					s.SetLeftExpanded(!s.leftOpen)
+				toggleLeft := func() {
+					if IconButton(c, lucide.PanelLeft(), l10n.In(c.Locale()).Text("toggleSidebar")).Clicked() {
+						s.SetLeftExpanded(!s.leftOpen)
+					}
 				}
-				// Align the title with the main surface, but keep it beyond the
-				// leading toggle when the sidebar is narrow or collapsed.
-				titleInset := max(8, leftWidth*leftProgress+16-leftInset-max(32, c.Theme().Rem(2)))
-				if s.options.LeftHeader != nil && s.leftOpen && leftProgress == 1 && titleInset > 24 {
-					ui.Row(c).Key("left-header").Width(titleInset - 24).Shrink(0).FillHeight().
+				toggleSize := max(32, c.Theme().Rem(2))
+				// The sidebar's header ends 8 DIPs before its edge.
+				leftRoom := leftWidth - 8 - leftInset
+				var titleInset float32
+				if s.options.LeftToggleTrailing && s.leftOpen && leftProgress == 1 && leftRoom >= toggleSize {
+					ui.Row(c).Key("left-header").Width(leftRoom).Shrink(0).FillHeight().
 						AlignItems(ui.Center).Clip().Children(func() {
-						ui.Spacer(c)
-						s.options.LeftHeader(c)
+						ui.Row(c).Grow(1).MinWidth(0).FillHeight().AlignItems(ui.Center).Clip().Children(func() {
+							ui.Spacer(c)
+							if s.options.LeftHeader != nil {
+								s.options.LeftHeader(c)
+							}
+						})
+						toggleLeft()
 					})
+					// Align the title with the main surface.
 					titleInset = 24
+				} else {
+					toggleLeft()
+					// Align the title with the main surface, but keep it beyond the
+					// leading toggle when the sidebar is narrow or collapsed.
+					titleInset = max(8, leftWidth*leftProgress+16-leftInset-toggleSize)
+					if s.options.LeftHeader != nil && s.leftOpen && leftProgress == 1 && titleInset > 24 {
+						ui.Row(c).Key("left-header").Width(titleInset - 24).Shrink(0).FillHeight().
+							AlignItems(ui.Center).Clip().Children(func() {
+							ui.Spacer(c)
+							s.options.LeftHeader(c)
+						})
+						titleInset = 24
+					}
 				}
 				ui.Row(c).Grow(1).MinWidth(0).FillHeight().Clip().Padding(0, 8, 0, titleInset).Children(func() {
 					if s.options.ContentTitle != nil {
@@ -490,66 +516,4 @@ func (s *Shell) build(c *ui.Context) {
 			s.rightResizeHandle(c, width, rightWidth, maxRightWidth)
 		}
 	})
-}
-
-// resizeHandle uses MyGo's pointer capture and keyboard input, overlaid on
-// the separator rather than inserting another layout column.
-func (s *Shell) resizeHandle(c *ui.Context, width, maxWidth float32) {
-	handle := ui.Box(c).Key("left-resize").Absolute().Left(width - 3).Top(0).Bottom(0).Width(6).
-		Cursor(ui.CursorResizeEW).Focusable().Role(ui.RoleSplitter).Label(l10n.In(c.Locale()).Text("resizeSidebar"))
-	next := width
-	if dx, _, held := handle.Dragged(); held {
-		handle.Focus()
-		next += dx
-	}
-	if handle.Shortcut(0, ui.KeyLeft) {
-		next -= 10
-	}
-	if handle.Shortcut(0, ui.KeyRight) {
-		next += 10
-	}
-	if handle.DoubleClicked() {
-		s.leftWidth = float32(s.options.LeftWidth)
-		c.Invalidate()
-	} else if next != width {
-		s.leftWidth = max(float32(s.options.LeftMinWidth), min(next, maxWidth))
-		c.Invalidate()
-	}
-	handle.FocusRing(handle.FocusVisible())
-}
-
-// captionWidth is the width of the caption buttons' row.
-func captionWidth(c *ui.Context) float32 {
-	return 3*max(32, c.Theme().Rem(2)) + 2*4
-}
-
-// rightResizeHandle is resizeHandle for the right sidebar, at the window's
-// width less the sidebar's.
-func (s *Shell) rightResizeHandle(c *ui.Context, windowWidth, width, maxWidth float32) {
-	handle := ui.Box(c).Key("right-resize").Absolute().Left(windowWidth - width - 3).Top(0).Bottom(0).Width(6).
-		Cursor(ui.CursorResizeEW).Focusable().Role(ui.RoleSplitter).Label(l10n.In(c.Locale()).Text("resizeRightSidebar"))
-	next := width
-	if dx, _, held := handle.Dragged(); held {
-		handle.Focus()
-		next -= dx
-	}
-	if handle.Shortcut(0, ui.KeyLeft) {
-		next += 10
-	}
-	if handle.Shortcut(0, ui.KeyRight) {
-		next -= 10
-	}
-	if handle.DoubleClicked() {
-		s.rightWidth = float32(s.options.RightWidth)
-		c.Invalidate()
-	} else if next != width {
-		s.rightWidth = max(float32(s.options.RightMinWidth), min(next, maxWidth))
-		c.Invalidate()
-	}
-	handle.FocusRing(handle.FocusVisible())
-}
-
-// Separators overlay the surface; they never reserve layout space.
-func shellSeparator(c *ui.Context) {
-	ui.Box(c).Key("separator").Absolute().Left(0).Top(0).Bottom(0).Width(1).Background(c.Theme().Border)
 }
