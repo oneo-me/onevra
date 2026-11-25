@@ -2,6 +2,7 @@ package sidebar
 
 import (
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 )
@@ -59,13 +60,37 @@ func TestShellTitleInsetOptions(t *testing.T) {
 		tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 		return title
 	}
-	base := rect(0, 0) // non-positive values use the defaults 24/8
+	base := rect(0, 0) // non-positive values use the defaults 16/8
 	shifted := rect(12, 20)
-	if shifted.X != base.X-12 {
-		t.Fatal("TitleInsetLeft did not move the title by 24-12", base, shifted)
+	if shifted.X != base.X-4 {
+		t.Fatal("TitleInsetLeft did not move the title by 16-12", base, shifted)
 	}
 	if shifted.X+shifted.W != base.X+base.W-12 {
 		t.Fatal("TitleInsetRight did not narrow the trailing room", base, shifted)
+	}
+	// A small inset must still keep the title inside the content area and
+	// clear of the leading toggle while narrow, animating, or collapsed.
+	narrow := newShell(ShellOptions{
+		LeftWidth: 100, LeftMinWidth: 100, TitleInsetLeft: 2,
+		ContentTitle: func(c *ui.Context) { ui.Text(c, "Current document").SingleLine() },
+	})
+	ntt := ui.NewTester(narrow.view, 820, 600)
+	ntt.SetTitleBar(ui.TitleBar{Height: 48, Left: 80})
+	ntt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	toggle, _ := ntt.Find("Toggle sidebar")
+	title, _ := ntt.Find("Current document")
+	if title.X < toggle.X+toggle.W+8 || title.X < 100 {
+		t.Fatalf("small TitleInsetLeft violated clearance: title=%+v toggle=%+v", title, toggle)
+	}
+	ntt.SetPreferences(ui.Preferences{})
+	narrow.SetLeftExpanded(false)
+	ntt.Frame()
+	ntt.Advance(55 * time.Millisecond)
+	ntt.Frame()
+	toggle, _ = ntt.Find("Toggle sidebar")
+	title, _ = ntt.Find("Current document")
+	if title.X < toggle.X+toggle.W+8 {
+		t.Fatalf("animating small TitleInsetLeft overlapped toggle: title=%+v toggle=%+v", title, toggle)
 	}
 	collapsed := func(insetLeft float32) ui.Rect {
 		s, _ := fixture()

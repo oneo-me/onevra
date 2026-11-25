@@ -139,7 +139,7 @@ func TestShellTitleInsetWithTrailingToggle(t *testing.T) {
 	if trailing.X != leading.X {
 		t.Fatalf("trailing toggle moved the inset title: %+v vs %+v", leading, trailing)
 	}
-	if leading.X != 256 { // 252+16-12: the aligned position shifted by the inset
+	if leading.X != 264 { // 252+12: LeftWidth + TitleInsetLeft
 		t.Fatalf("TitleInsetLeft did not shift the aligned title: %+v", leading)
 	}
 }

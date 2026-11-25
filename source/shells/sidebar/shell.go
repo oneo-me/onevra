@@ -37,15 +37,14 @@ type ShellOptions struct {
 	// a title, breadcrumbs or actions; nil leaves it blank. Shell clips it to
 	// the room after the sidebar control and hides it on replacement pages.
 	ContentTitle func(*ui.Context)
-	// TitleInsetLeft is the room between the sidebar header's content and the
-	// title: 24 by default, which aligns the title with the main surface. A
-	// smaller value draws the title toward the sidebar, a larger one toward
-	// the main surface. The shift follows the expansion: none while the
-	// sidebar is collapsed or animating, full once it is expanded, so the
-	// collapsed title keeps its toggle clearance. Non-positive values use 24.
+	// TitleInsetLeft is the leading padding of ContentTitle from the main
+	// content's leading edge in DIPs: 16 by default, which aligns the title
+	// with the main surface. Non-positive values use 16. The title still
+	// clears the leading sidebar toggle when the sidebar is narrow, animating,
+	// or collapsed.
 	TitleInsetLeft float32
-	// TitleInsetRight is the title slot's trailing padding; non-positive
-	// values use 8.
+	// TitleInsetRight is the title slot's trailing padding in DIPs;
+	// non-positive values use 8.
 	TitleInsetRight float32
 	// LeftHeader builds trailing actions beside the sidebar toggle, within the
 	// expanded sidebar's header. It is clipped to the available safe area and
@@ -468,9 +467,9 @@ func (s *Shell) build(c *ui.Context) {
 				// The sidebar's header ends 8 DIPs before its edge.
 				leftRoom := leftWidth - 8 - leftInset
 				var titleInset float32
-				inset := float32(24)
+				insetLeft := float32(16)
 				if s.options.TitleInsetLeft > 0 {
-					inset = s.options.TitleInsetLeft
+					insetLeft = s.options.TitleInsetLeft
 				}
 				insetRight := float32(8)
 				if s.options.TitleInsetRight > 0 {
@@ -487,26 +486,24 @@ func (s *Shell) build(c *ui.Context) {
 						})
 						toggleLeft()
 					})
-					// Align the title with the main surface.
-					titleInset = 24
+					// left-header ends 8 DIPs before the sidebar's edge.
+					titleInset = 8 + insetLeft
 				} else {
 					toggleLeft()
-					// Align the title with the main surface, but keep it beyond the
-					// leading toggle when the sidebar is narrow or collapsed.
-					titleInset = max(8, leftWidth*leftProgress+16-leftInset-toggleSize)
-					if s.options.LeftHeader != nil && s.leftOpen && leftProgress == 1 && titleInset > 24 {
-						ui.Row(c).Key("left-header").Width(titleInset - 24).Shrink(0).FillHeight().
+					leftHeaderWidth := leftRoom - toggleSize
+					if s.options.LeftHeader != nil && s.leftOpen && leftProgress == 1 && leftHeaderWidth > 0 {
+						ui.Row(c).Key("left-header").Width(leftHeaderWidth).Shrink(0).FillHeight().
 							AlignItems(ui.Center).Clip().Children(func() {
 							ui.Spacer(c)
 							s.options.LeftHeader(c)
 						})
-						titleInset = 24
+						titleInset = 8 + insetLeft
+					} else {
+						// Align the title with the main surface, but keep it beyond the
+						// leading toggle when the sidebar is narrow, animating, or collapsed.
+						titleInset = max(8, leftWidth*leftProgress+insetLeft-leftInset-toggleSize)
 					}
 				}
-				// The consumer's inset shifts the title by its difference from
-				// the default, following the expansion: the header keeps its
-				// room, the title moves, and the collapsed clearance stands.
-				titleInset += (inset - 24) * leftProgress
 				ui.Row(c).Grow(1).MinWidth(0).FillHeight().Clip().Padding(0, insetRight, 0, titleInset).Children(func() {
 					if s.options.ContentTitle != nil {
 						s.options.ContentTitle(c)

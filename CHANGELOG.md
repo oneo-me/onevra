@@ -4,8 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
-- Add `sidebar.ShellOptions.TitleInsetLeft` and `TitleInsetRight` for the content title slot's leading and trailing padding (defaults 24/8; non-positive values use the defaults)
-- Add `sidebar.ShellOptions.OnLeftExpanded` to report the left sidebar's expanded state after it changes
+- Add `sidebar.ShellOptions.TitleInsetLeft` and `TitleInsetRight` to adjust the content title slot's leading and trailing padding (#21 by @Niexiawei)
+- Add `sidebar.ShellOptions.OnLeftExpanded` to report changes to the left sidebar's expanded state (#21 by @Niexiawei)
 
 ## [0.2026.19] - 2026-11-25
 
