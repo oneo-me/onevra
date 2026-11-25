@@ -54,6 +54,12 @@ type ShellOptions struct {
 	// expanded sidebar's header, after LeftHeader, when it fits. While the
 	// sidebar is collapsed or animating, the toggle keeps its leading place.
 	LeftToggleTrailing bool
+	// OnLeftExpanded reports the left sidebar's expanded state after it
+	// changes: true when it expanded, false when it folded. SetLeftExpanded
+	// and the header's toggle call it on the window's thread; the initial
+	// state does not call it, read LeftExpanded for that. It must not call
+	// SetLeftExpanded itself. Nil ignores.
+	OnLeftExpanded func(expanded bool)
 	// LeftToolbar builds a fixed bottom toolbar beneath Left; nil omits it.
 	// Use IconButton for actions and ui.Spacer for trailing alignment.
 	LeftToolbar func(*ui.Context)
@@ -244,8 +250,12 @@ func (s *Shell) LeftExpanded() bool { return s.leftOpen }
 
 // SetLeftExpanded animates the interior layout without resizing the window.
 func (s *Shell) SetLeftExpanded(open bool) {
+	changed := open != s.leftOpen
 	s.leftOpen = open
 	s.refresh()
+	if changed && s.options.OnLeftExpanded != nil {
+		s.options.OnLeftExpanded(open)
+	}
 }
 
 // RightWidth reports the chosen right sidebar width in DIPs, as LeftWidth.

@@ -47,3 +47,39 @@ func TestLanguageChangePreservesShell(t *testing.T) {
 		t.Fatal("English defaults not restored")
 	}
 }
+
+func TestShellLeftExpandedCallback(t *testing.T) {
+	s, _ := fixture()
+	var calls []bool
+	s.options.OnLeftExpanded = func(expanded bool) { calls = append(calls, expanded) }
+	tt := ui.NewTester(s.view, 820, 600)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	if len(calls) != 0 {
+		t.Fatal("construction notified the callback", calls)
+	}
+	s.SetLeftExpanded(true) // same as the initial state: no call
+	s.SetLeftExpanded(false)
+	s.SetLeftExpanded(true)
+	if len(calls) != 2 || calls[0] != false || calls[1] != true {
+		t.Fatal("callback sequence wrong", calls)
+	}
+	if err := tt.Click("Toggle sidebar"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if len(calls) != 3 || calls[2] != false {
+		t.Fatal("toggle click did not notify", calls)
+	}
+}
+
+func TestShellLeftExpandedCallbackNil(t *testing.T) {
+	s, _ := fixture() // OnLeftExpanded nil: toggling must not panic
+	tt := ui.NewTester(s.view, 820, 600)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	s.SetLeftExpanded(false)
+	s.SetLeftExpanded(true)
+	tt.Frame()
+	if !s.LeftExpanded() {
+		t.Fatal("nil callback broke the toggle")
+	}
+}
