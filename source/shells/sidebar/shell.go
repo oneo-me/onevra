@@ -40,8 +40,9 @@ type ShellOptions struct {
 	// TitleInsetLeft is the room between the sidebar header's content and the
 	// title: 24 by default, which aligns the title with the main surface. A
 	// smaller value draws the title toward the sidebar, a larger one toward
-	// the main surface; the collapsed and animating sidebar shifts by the same
-	// amount, keeping its toggle clearance. Non-positive values use 24.
+	// the main surface. The shift follows the expansion: none while the
+	// sidebar is collapsed or animating, full once it is expanded, so the
+	// collapsed title keeps its toggle clearance. Non-positive values use 24.
 	TitleInsetLeft float32
 	// TitleInsetRight is the title slot's trailing padding; non-positive
 	// values use 8.
@@ -503,8 +504,9 @@ func (s *Shell) build(c *ui.Context) {
 					}
 				}
 				// The consumer's inset shifts the title by its difference from
-				// the default: the header keeps its room, the title moves.
-				titleInset += inset - 24
+				// the default, following the expansion: the header keeps its
+				// room, the title moves, and the collapsed clearance stands.
+				titleInset += (inset - 24) * leftProgress
 				ui.Row(c).Grow(1).MinWidth(0).FillHeight().Clip().Padding(0, insetRight, 0, titleInset).Children(func() {
 					if s.options.ContentTitle != nil {
 						s.options.ContentTitle(c)

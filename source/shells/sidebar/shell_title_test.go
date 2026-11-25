@@ -82,7 +82,7 @@ func TestShellTitleInsetOptions(t *testing.T) {
 		return title
 	}
 	baseC, shiftedC := collapsed(0), collapsed(12)
-	if shiftedC.X != baseC.X-12 {
-		t.Fatal("collapsed title did not shift by 24-12", baseC, shiftedC)
+	if shiftedC.X != baseC.X {
+		t.Fatal("collapsed title moved with the inset; it keeps the toggle clearance", baseC, shiftedC)
 	}
 }
